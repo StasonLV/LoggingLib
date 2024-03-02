@@ -17,7 +17,16 @@ extension Logger {
         formatter.dateFormat = "HH:mm:ss"
         return formatter
     }()
-    
+/// Log a message with the specified category, message, priority, and additional information.
+///
+/// - Parameters:
+///   - category: The category of the log.
+///   - message: The log message.
+///   - level: The priority level of the log.
+///   - file: The file path. By default, it is automatically filled with the calling file path.
+///   - function: The function name. By default, it is automatically filled with the calling function name.
+///   - line: The line number. By default, it is automatically filled with the calling line number.
+
     public static func log(
         for category: Categories,
         with message: String,
@@ -27,7 +36,7 @@ extension Logger {
         line: Int = #line
     ) {
         let logTime = dateFormatter.string(from: Date())
-        let logMessage = "\(iconForCategory(category)) [\(logTime)] [\(URL(fileURLWithPath: file).deletingPathExtension().lastPathComponent) on line: \(line)] - \(function) - \(message)"
+        let logMessage = "\(iconForCategory(category)) [\(logTime)][\(URL(fileURLWithPath: file).deletingPathExtension().lastPathComponent) on line: \(line)] - \(function) - \(message)"
         
         os_log("%{public}@", log: OSLog(subsystem: subsystem, category: category.rawValue), type: level, logMessage)
     }

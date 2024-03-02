@@ -4,7 +4,7 @@
 import OSLog
 
 extension Logger {
-    private enum Categories: String {
+    public enum Categories: String {
         case viewcycleLogging = "viewcycleLogging"
         case userInterfaceLogging = "userInterfaceLogging"
         case networkLogging = "networkLogging"
@@ -31,7 +31,7 @@ extension Logger {
         }
     }
 
-    private static func logWithDetails2(for category: Categories,
+    public static func logWithDetails2(for category: Categories,
                                         with message: String,
                                        priority level: OSLogType,
                                         file: String = #file,

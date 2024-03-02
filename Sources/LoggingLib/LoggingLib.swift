@@ -39,7 +39,7 @@ extension Logger {
                                        line: Int
     ) {
         let logTime = dateFormatter.string(from: Date())
-        let logMessage = "\(iconForCategory(category)) \(logTime): \(file.components(separatedBy: "/").last ?? "") - \(function) - Line \(line) - \(message)"
+        let logMessage = "\(iconForCategory(category)) [\(logTime)] [\(file.components(separatedBy: "/").last ?? ""):\(line)] - \(function) - \(message)"
 
         os_log("%{public}@", log: OSLog(subsystem: subsystem, category: category.rawValue), type: level, logMessage)
     }

@@ -27,9 +27,7 @@ extension Logger {
         line: Int = #line
     ) {
         let logTime = dateFormatter.string(from: Date())
-        let logMessage = "\(iconForCategory(category)) [\(logTime)] [\(file.components(separatedBy: "/").last ?? ""):\(line)] - \(function) - \(message)"
-        
-        print(subsystem)
+        let logMessage = "\(iconForCategory(category)) [\(logTime)] [\(URL(fileURLWithPath: file).deletingPathExtension().lastPathComponent) on line: \(line)] - \(function) - \(message)"
         
         os_log("%{public}@", log: OSLog(subsystem: subsystem, category: category.rawValue), type: level, logMessage)
     }

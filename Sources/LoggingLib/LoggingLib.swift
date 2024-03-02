@@ -31,6 +31,19 @@ extension Logger {
         }
     }
 
+    private static func logWithDetails2(for category: Categories,
+                                        with message: String,
+                                       priority level: OSLogType,
+                                        file: String = #file,
+                                        function: String = #function,
+                                        line: Int = #line
+    ) {
+        let logTime = dateFormatter.string(from: Date())
+        let logMessage = "\(iconForCategory(category)) [\(logTime)] [\(file.components(separatedBy: "/").last ?? ""):\(line)] - \(function) - \(message)"
+
+        os_log("%{public}@", log: OSLog(subsystem: subsystem, category: category.rawValue), type: level, logMessage)
+    }
+    
     private static func logWithDetails(category: Categories,
                                        level: OSLogType,
                                        message: String,

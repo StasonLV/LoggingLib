@@ -36,8 +36,6 @@ public extension Logger {
     }
 
     func logNetwork(level: OSLogType, message: String, file: String = #file, function: String = #function, line: Int = #line) {
-        logWithDetails(level: level, message: message, file: file, function: function, line: line)
+        logWithDetails(level: level, message: "🌐 \(message)", file: file, function: function, line: line)
     }
-    
-
 }

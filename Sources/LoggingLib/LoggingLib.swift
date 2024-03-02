@@ -7,22 +7,37 @@ public extension Logger {
     
     private static var subsystem = Bundle.main.bundleIdentifier!
     
-    static let viewCycle = Logger(subsystem: subsystem, category: "ViewcycleLogging")
-    static let statistics = Logger(subsystem: subsystem, category: "StatisticsLogging")
-    static let ui = Logger(subsystem: subsystem, category: "InterfaceLogging")
-    static let network = Logger(subsystem: subsystem, category: "NetworkLogging")
+    static var viewCycle: Logger {
+        Logger(subsystem: subsystem, category: "ViewcycleLogging")
+    }
+    
+    static var statistics: Logger {
+        Logger(subsystem: subsystem, category: "StatisticsLogging")
+    }
+    
+    static var ui: Logger {
+        Logger(subsystem: subsystem, category: "InterfaceLogging")
+    }
+    
+    static var network: Logger {
+        Logger(subsystem: subsystem, category: "NetworkLogging")
+    }
+    
+    private static var formatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm:ss"
+        return formatter
+    }()
     
     func logWithDetails(level: OSLogType, message: String, file: String = #file, function: String = #function, line: Int = #line) {
-        let formatter = DateFormatter()
         var logTime: String {
-            formatter.dateFormat = "HH:mm:ss"
-            return "[\(formatter.string(from: Date()))]"
+            return "[\(Logger.formatter.string(from: Date()))]"
         }
-        let log = OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "CustomLogs")
+        let log = OSLog(subsystem: Logger.subsystem, category: "CustomLogs")
         let logMessage = "🌐 \(logTime): \(file.components(separatedBy: "/").last ?? "") - \(function) - Line \(line) - \(message)"
         os_log("%{public}@", log: log, type: level, logMessage)
     }
-
+    
     func logViewCycle(level: OSLogType, message: String, file: String = #file, function: String = #function, line: Int = #line) {
         logWithDetails(level: level, message: message, file: file, function: function, line: line)
     }

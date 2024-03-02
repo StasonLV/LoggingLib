@@ -19,8 +19,8 @@ public extension Logger {
             return "[\(formatter.string(from: Date()))]"
         }
         let log = OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "CustomLogs")
-        let logMessage = "\(logTime): \(file.components(separatedBy: "/").last ?? "") - \(function) - Line \(line) - \(message)"
-        os_log("%{public}@", log: log, type: OSLogType.default, logMessage)
+        let logMessage = "🌐 \(logTime): \(file.components(separatedBy: "/").last ?? "") - \(function) - Line \(line) - \(message)"
+        os_log("%{public}@", log: log, type: level, logMessage)
     }
 
     func logViewCycle(level: OSLogType, message: String, file: String = #file, function: String = #function, line: Int = #line) {
@@ -36,6 +36,6 @@ public extension Logger {
     }
 
     func logNetwork(level: OSLogType, message: String, file: String = #file, function: String = #function, line: Int = #line) {
-        logWithDetails(level: level, message: "🌐 \(message)", file: file, function: function, line: line)
+        logWithDetails(level: level, message: "\(message)", file: file, function: function, line: line)
     }
 }

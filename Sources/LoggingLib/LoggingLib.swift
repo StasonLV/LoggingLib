@@ -13,8 +13,13 @@ public extension Logger {
     static let network = Logger(subsystem: subsystem, category: "NetworkLogging")
     
     func logWithDetails(level: OSLogType, message: String, file: String = #file, function: String = #function, line: Int = #line) {
+        let formatter = DateFormatter()
+        var logTime: String {
+            formatter.dateFormat = "HH:mm:ss"
+            return "[\(formatter.string(from: Date()))]"
+        }
         let log = OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "CustomLogs")
-        let logMessage = "\(Date()): \(file.components(separatedBy: "/").last ?? "") - \(function) - Line \(line) - \(message)"
+        let logMessage = "\(logTime): \(file.components(separatedBy: "/").last ?? "") - \(function) - Line \(line) - \(message)"
         os_log("%{public}@", log: log, type: OSLogType.default, logMessage)
     }
 
@@ -33,4 +38,6 @@ public extension Logger {
     func logNetwork(level: OSLogType, message: String, file: String = #file, function: String = #function, line: Int = #line) {
         logWithDetails(level: level, message: message, file: file, function: function, line: line)
     }
+    
+
 }

@@ -77,7 +77,7 @@ extension Logger {
                 try textToWrite.write(to: logFileURL, atomically: true, encoding: .utf8)
             }
             
-            self.log(for: .privateFileLogging, with: "Log successfully appended to file!", priority: .default)
+//            self.log(for: .privateFileLogging, with: "Log successfully appended to file!", priority: .default)
 
         } catch {
             self.log(for: .privateFileLogging, with: "Failed to write log to file: \(error.localizedDescription)", priority: .error)
@@ -94,7 +94,7 @@ extension Logger {
         
         do {
             let fileContent = try String(contentsOf: fileURL, encoding: .utf8)
-            log(for: .privateFileLogging, with: "Log file content: \(fileContent)", priority: .default)
+//            log(for: .privateFileLogging, with: "Log file content: \(fileContent)", priority: .default)
 
         } catch {
             log(for: .privateFileLogging, with: "Error reading log file content: \(error.localizedDescription)", priority: .error)
@@ -112,7 +112,7 @@ extension Logger {
         
         do {
             try FileManager.default.removeItem(at: logFileURL)
-            log(for: .privateFileLogging, with: "Log file cleared successfully", priority: .default)
+//            log(for: .privateFileLogging, with: "Log file cleared successfully", priority: .default)
         } catch {
             log(for: .privateFileLogging, with: "Failed to clear log file: \(error.localizedDescription)", priority: .default)
         }

@@ -15,6 +15,8 @@ extension Logger {
         case networkLogging = "networkLogging"
         /// - statisticsLogging: Общая категория логирования для неспецифичных событий и статистики.
         case statisticsLogging = "statisticsLogging"
+        /// - privateFileLogging: Приватная категория для обработки записи/чтения логов в файл.
+        case privateFileLogging = "privateFileLogging"
     }
     /// Идентификатор бандла для поиска и фильтрации в Console.app.
     private static var subsystem = Bundle.main.bundleIdentifier!
@@ -58,7 +60,7 @@ extension Logger {
     private static func writeLogToFile(log: String) {
 #if DEBUG
         guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
-            self.log(for: .statisticsLogging, with: "Log file (log.txt) not found", priority: .error)
+            self.log(for: .privateFileLogging, with: "Log file (log.txt) not found", priority: .error)
             return
         }
         
@@ -75,10 +77,10 @@ extension Logger {
                 try textToWrite.write(to: logFileURL, atomically: true, encoding: .utf8)
             }
             
-            self.log(for: .statisticsLogging, with: "Log successfully appended to file!", priority: .default)
+            self.log(for: .privateFileLogging, with: "Log successfully appended to file!", priority: .default)
 
         } catch {
-            self.log(for: .statisticsLogging, with: "Failed to write log to file: \(error.localizedDescription)", priority: .error)
+            self.log(for: .privateFileLogging, with: "Failed to write log to file: \(error.localizedDescription)", priority: .error)
         }
 #endif
     }
@@ -86,23 +88,23 @@ extension Logger {
     ///
     private static func checkFileContent() {
         guard let fileURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("log.txt") else {
-            log(for: .statisticsLogging, with: "Log file (log.txt) not found", priority: .error)
+            log(for: .privateFileLogging, with: "Log file (log.txt) not found", priority: .error)
             return
         }
         
         do {
             let fileContent = try String(contentsOf: fileURL, encoding: .utf8)
-            log(for: .statisticsLogging, with: "Log file content: \(fileContent)", priority: .default)
+            log(for: .privateFileLogging, with: "Log file content: \(fileContent)", priority: .default)
 
         } catch {
-            log(for: .statisticsLogging, with: "Error reading log file content: \(error.localizedDescription)", priority: .error)
+            log(for: .privateFileLogging, with: "Error reading log file content: \(error.localizedDescription)", priority: .error)
         }
     }
     /// Clears log file (log.txt).
     ///
     public static func clearLogFile() {
         guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
-            log(for: .statisticsLogging, with: "Log file (log.txt) not found", priority: .error)
+            log(for: .privateFileLogging, with: "Log file (log.txt) not found", priority: .error)
             return
         }
         
@@ -110,9 +112,9 @@ extension Logger {
         
         do {
             try FileManager.default.removeItem(at: logFileURL)
-            log(for: .statisticsLogging, with: "Log file cleared successfully", priority: .default)
+            log(for: .privateFileLogging, with: "Log file cleared successfully", priority: .default)
         } catch {
-            log(for: .statisticsLogging, with: "Failed to clear log file: \(error.localizedDescription)", priority: .default)
+            log(for: .privateFileLogging, with: "Failed to clear log file: \(error.localizedDescription)", priority: .default)
         }
     }
 
@@ -133,6 +135,8 @@ extension Logger {
             return "🌐"
         case .statisticsLogging:
             return "📊"
+        case .privateFileLogging:
+            return "♿️"
         }
     }
 }

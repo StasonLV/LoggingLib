@@ -78,14 +78,22 @@ public struct TextLogger {
         
         do {
             let textToWrite = "\(Date()): \(text)\n"
-            try textToWrite.write(to: logFileURL, atomically: true, encoding: .utf8)
-            print("Log successfully written to file!")
+            
+            if let fileHandle = FileHandle(forWritingAtPath: logFileURL.path) {
+                fileHandle.seekToEndOfFile()
+                fileHandle.write(textToWrite.data(using: .utf8)!)
+                fileHandle.closeFile()
+            } else {
+                try textToWrite.write(to: logFileURL, atomically: true, encoding: .utf8)
+            }
+            
+            print("Log successfully appended to file!")
             
         } catch {
             print("Failed to write log to file: \(error.localizedDescription)")
         }
     }
-    
+
     public static func checkFileContent() {
         guard let fileURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("log.txt") else {
             print("Файл не найден")

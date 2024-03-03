@@ -35,6 +35,7 @@ extension Logger {
     ///   - file: The file path. By default, it is automatically filled with the calling file path.
     ///   - function: The function name. By default, it is automatically filled with the calling function name.
     ///   - line: The line number. By default, it is automatically filled with the calling line number.
+    ///   - appendToFile: Specify if you want to add it to log.txt file.
     public static func log(
         for category: Categories,
         with message: String,
@@ -94,7 +95,7 @@ extension Logger {
         
         do {
             let fileContent = try String(contentsOf: fileURL, encoding: .utf8)
-//            log(for: .privateFileLogging, with: "Log file content: \(fileContent)", priority: .default)
+            log(for: .privateFileLogging, with: "Log file content: \(fileContent)", priority: .default)
 
         } catch {
             log(for: .privateFileLogging, with: "Error reading log file content: \(error.localizedDescription)", priority: .error)

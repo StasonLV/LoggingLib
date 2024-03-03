@@ -70,12 +70,12 @@ extension Logger {
 
 public struct TextLogger {
     public func writeLogToFile() {
-#if false    // Логгирование
+        #if false    // Логгирование
         var textLog = TextLog()  // Убрать логгирование при публикации приложения
         let dateString = Date().toString(format: "dd.MM.yyyy HH:mm:ss")
-        textLog.write("\n\(dateString) \(NSURL.fileURL(withPath: #file).pathComponents.last!):\(#line) -> \(#function) \("didReceive notification")")
-        textLog.write("\n\(dateString) \(NSURL.fileURL(withPath: #file).pathComponents.last!):\(#line) -> \(#function) userInfo: \(userInfo)")
+        textLog.write("\n\(dateString) \(URL(fileURLWithPath: #file).lastPathComponent):\(#line) -> \(#function) - didReceive notification")
+        textLog.write("\n\(dateString) \(URL(fileURLWithPath: #file).lastPathComponent):\(#line) -> \(#function) - userInfo: \(userInfo)")
         print(textLog)
-#endif      // Логгирование
+        #endif      // Логгирование
     }
 }

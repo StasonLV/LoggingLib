@@ -85,4 +85,20 @@ public struct TextLogger {
             print("Failed to write log to file: \(error.localizedDescription)")
         }
     }
+    
+    public static func checkFileContent() {
+        guard let fileURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("log.txt") else {
+            print("Файл не найден")
+            return
+        }
+        
+        do {
+            let fileContent = try String(contentsOf: fileURL, encoding: .utf8)
+            print("Содержимое файла:")
+            print(fileContent)
+        } catch {
+            print("Ошибка чтения файла: \(error.localizedDescription)")
+        }
+    }
+
 }

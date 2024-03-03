@@ -68,8 +68,8 @@ extension Logger {
         let logFileURL = documentsDirectory.appendingPathComponent("log.txt")
         
         do {
-            let textToWrite = "\(log)\n".padding(toLength: "        ".count, withPad: "\t", startingAt: 0)
-
+            let textToWrite = "\(log)\n"
+            
             if let fileHandle = FileHandle(forWritingAtPath: logFileURL.path) {
                 fileHandle.seekToEndOfFile()
                 fileHandle.write(textToWrite.data(using: .utf8)!)

@@ -1,8 +1,8 @@
 import XCTest
 import OSLog
-@testable import LoggingLib
+@testable import LoggingPackage
 
-final class LoggingLibTests: XCTestCase {
+final class LoggingPackageTests: XCTestCase {
     func testLogViewcycleLogging() {
          let message = "View cycle started"
          Logger.log(for: .viewcycleLogging, with: message, priority: .info)

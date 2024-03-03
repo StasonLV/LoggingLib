@@ -1,8 +1,7 @@
-// The Swift Programming Language
-// https://docs.swift.org/swift-book
-// MyAwesomePackage
+// Logging Package
+// Logging Package
 //
-// Ссылка на документацию или репозиторий
+// https://github.com/StasonLV/LoggingPackage
 
 import OSLog
 

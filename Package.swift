@@ -4,23 +4,23 @@
 import PackageDescription
 
 let package = Package(
-    name: "LoggingLib",
+    name: "LoggingPackage",
     platforms: [
         .iOS(.v14)
     ],
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
-            name: "LoggingLib",
-            targets: ["LoggingLib"]),
+            name: "LoggingPackage",
+            targets: ["LoggingPackage"]),
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
         // Targets can depend on other targets in this package and products from dependencies.
         .target(
-            name: "LoggingLib"),
+            name: "LoggingPackage"),
         .testTarget(
-            name: "LoggingLibTests",
-            dependencies: ["LoggingLib"])
+            name: "LoggingPackageTests",
+            dependencies: ["LoggingPackage"])
     ]
 )

@@ -45,31 +45,13 @@ extension Logger {
         let logTime = dateFormatter.string(from: Date())
         let logMessage = "\(iconForCategory(category)) [\(logTime)][\(URL(fileURLWithPath: file).deletingPathExtension().lastPathComponent) on line: \(line)] - \(function) - \(message)"
         
+        writeLogToFile(text: logMessage)
+        checkFileContent()
+        
         os_log("%{public}@", log: OSLog(subsystem: subsystem, category: category.rawValue), type: level, logMessage)
     }
-    /// Add icon to log depending on selected category.
-    ///
-    /// - Parameters:
-    ///   - category: The category of the log.
-    ///
-    /// - Returns:
-    ///  Returns icon according to log type.
-    internal static func iconForCategory(_ category: Categories) -> String {
-        switch category {
-        case .viewcycleLogging:
-            return "🔄"
-        case .userInterfaceLogging:
-            return "⚙️"
-        case .networkLogging:
-            return "🌐"
-        case .statisticsLogging:
-            return "📊"
-        }
-    }
-}
-
-public struct TextLogger {
-    public static func writeLogToFile(text: String) {
+    private static func writeLogToFile(text: String) {
+        #if DEBUG
         guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
             return
         }
@@ -92,9 +74,10 @@ public struct TextLogger {
         } catch {
             print("Failed to write log to file: \(error.localizedDescription)")
         }
+        #endif
     }
-
-    public static func checkFileContent() {
+    
+    private static func checkFileContent() {
         guard let fileURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("log.txt") else {
             print("Файл не найден")
             return
@@ -109,4 +92,68 @@ public struct TextLogger {
         }
     }
 
+    /// Add icon to log depending on selected category.
+    ///
+    /// - Parameters:
+    ///   - category: The category of the log.
+    ///
+    /// - Returns:
+    ///  Returns icon according to log type.
+    internal static func iconForCategory(_ category: Categories) -> String {
+        switch category {
+        case .viewcycleLogging:
+            return "🔄"
+        case .userInterfaceLogging:
+            return "⚙️"
+        case .networkLogging:
+            return "🌐"
+        case .statisticsLogging:
+            return "📊"
+        }
+    }
 }
+//
+//public struct TextLogger {
+//    public static func writeLogToFile(text: String) {
+//        #if DEBUG
+//        guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+//            return
+//        }
+//        
+//        let logFileURL = documentsDirectory.appendingPathComponent("log.txt")
+//        
+//        do {
+//            let textToWrite = "\(Date()): \(text)\n"
+//            
+//            
+//            if let fileHandle = FileHandle(forWritingAtPath: logFileURL.path) {
+//                fileHandle.seekToEndOfFile()
+//                fileHandle.write(textToWrite.data(using: .utf8)!)
+//                fileHandle.closeFile()
+//            } else {
+//                try textToWrite.write(to: logFileURL, atomically: true, encoding: .utf8)
+//            }
+//            
+//            print("Log successfully appended to file!")
+//            
+//        } catch {
+//            print("Failed to write log to file: \(error.localizedDescription)")
+//        }
+//        #endif
+//    }
+//
+//    public static func checkFileContent() {
+//        guard let fileURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("log.txt") else {
+//            print("Файл не найден")
+//            return
+//        }
+//        
+//        do {
+//            let fileContent = try String(contentsOf: fileURL, encoding: .utf8)
+//            print("Содержимое файла:")
+//            print(fileContent)
+//        } catch {
+//            print("Ошибка чтения файла: \(error.localizedDescription)")
+//        }
+//    }
+//}

@@ -69,7 +69,7 @@ extension Logger {
 }
 
 public struct TextLogger {
-    func writeLogToFile() {
+    public func writeLogToFile() {
 #if false    // Логгирование
         var textLog = TextLog()  // Убрать логгирование при публикации приложения
         let dateString = Date().toString(format: "dd.MM.yyyy HH:mm:ss")

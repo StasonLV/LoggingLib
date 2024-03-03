@@ -95,7 +95,7 @@ extension Logger {
         
         do {
             let fileContent = try String(contentsOf: fileURL, encoding: .utf8)
-            log(for: .privateFileLogging, with: "Log file content: \(fileContent)", priority: .default)
+            log(for: .privateFileLogging, with: "Log file content:\n\(fileContent)", priority: .default)
 
         } catch {
             log(for: .privateFileLogging, with: "Error reading log file content: \(error.localizedDescription)", priority: .error)

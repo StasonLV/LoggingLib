@@ -46,9 +46,9 @@ extension Logger {
         let logMessage = "\(iconForCategory(category)) [\(logTime)][\(URL(fileURLWithPath: file).deletingPathExtension().lastPathComponent) on line: \(line)] - \(function) - \(message)"
         
         writeLogToFile(text: logMessage)
-        checkFileContent()
         
         os_log("%{public}@", log: OSLog(subsystem: subsystem, category: category.rawValue), type: level, logMessage)
+        checkFileContent()
     }
     private static func writeLogToFile(text: String) {
         #if DEBUG
@@ -112,48 +112,3 @@ extension Logger {
         }
     }
 }
-//
-//public struct TextLogger {
-//    public static func writeLogToFile(text: String) {
-//        #if DEBUG
-//        guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
-//            return
-//        }
-//        
-//        let logFileURL = documentsDirectory.appendingPathComponent("log.txt")
-//        
-//        do {
-//            let textToWrite = "\(Date()): \(text)\n"
-//            
-//            
-//            if let fileHandle = FileHandle(forWritingAtPath: logFileURL.path) {
-//                fileHandle.seekToEndOfFile()
-//                fileHandle.write(textToWrite.data(using: .utf8)!)
-//                fileHandle.closeFile()
-//            } else {
-//                try textToWrite.write(to: logFileURL, atomically: true, encoding: .utf8)
-//            }
-//            
-//            print("Log successfully appended to file!")
-//            
-//        } catch {
-//            print("Failed to write log to file: \(error.localizedDescription)")
-//        }
-//        #endif
-//    }
-//
-//    public static func checkFileContent() {
-//        guard let fileURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("log.txt") else {
-//            print("Файл не найден")
-//            return
-//        }
-//        
-//        do {
-//            let fileContent = try String(contentsOf: fileURL, encoding: .utf8)
-//            print("Содержимое файла:")
-//            print(fileContent)
-//        } catch {
-//            print("Ошибка чтения файла: \(error.localizedDescription)")
-//        }
-//    }
-//}

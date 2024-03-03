@@ -69,13 +69,20 @@ extension Logger {
 }
 
 public struct TextLogger {
-    public func writeLogToFile() {
-        #if false    // Логгирование
-        var textLog = TextLog()  // Убрать логгирование при публикации приложения
-        let dateString = Date().toString(format: "dd.MM.yyyy HH:mm:ss")
-        textLog.write("\n\(dateString) \(URL(fileURLWithPath: #file).lastPathComponent):\(#line) -> \(#function) - didReceive notification")
-        textLog.write("\n\(dateString) \(URL(fileURLWithPath: #file).lastPathComponent):\(#line) -> \(#function) - userInfo: \(userInfo)")
-        print(textLog)
-        #endif      // Логгирование
+    public static func writeLogToFile(text: String) {
+        guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+            return
+        }
+        
+        let logFileURL = documentsDirectory.appendingPathComponent("log.txt")
+        
+        do {
+            let textToWrite = "\(Date()): \(text)\n"
+            try textToWrite.write(to: logFileURL, atomically: true, encoding: .utf8)
+            print("Log successfully written to file!")
+            
+        } catch {
+            print("Failed to write log to file: \(error.localizedDescription)")
+        }
     }
 }

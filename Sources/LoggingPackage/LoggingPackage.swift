@@ -1,5 +1,4 @@
 // Logging Package
-// Logging Package
 //
 // https://github.com/StasonLV/LoggingPackage
 
@@ -17,7 +16,7 @@ extension Logger {
         /// - statisticsLogging: Общая категория логирования для неспецифичных событий и статистики.
         case statisticsLogging = "statisticsLogging"
     }
-    /// Идентификатор бандла для поиска и фильтрации в Console.app..
+    /// Идентификатор бандла для поиска и фильтрации в Console.app.
     private static var subsystem = Bundle.main.bundleIdentifier!
     /// Форматтер времени для лог файла.
     private static let dateFormatter: DateFormatter = {
@@ -40,26 +39,33 @@ extension Logger {
         priority level: OSLogType,
         file: String = #file,
         function: String = #function,
-        line: Int = #line
+        line: Int = #line,
+        appendToFile: Bool = false
     ) {
         let logTime = dateFormatter.string(from: Date())
         let logMessage = "\(iconForCategory(category)) [\(logTime)][\(URL(fileURLWithPath: file).deletingPathExtension().lastPathComponent) on line: \(line)] - \(function) - \(message)"
         
-        writeLogToFile(text: logMessage)
-        
         os_log("%{public}@", log: OSLog(subsystem: subsystem, category: category.rawValue), type: level, logMessage)
-        checkFileContent()
+        if appendToFile {
+            writeLogToFile(log: logMessage)
+            checkFileContent()
+        }
     }
-    private static func writeLogToFile(text: String) {
-        #if DEBUG
+    /// Write log message into log.txt file with the specified category, message, priority, and additional information.
+    ///
+    /// - Parameters:
+    ///   - log: Content of the log file.
+    private static func writeLogToFile(log: String) {
+#if DEBUG
         guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+            self.log(for: .statisticsLogging, with: "Log file (log.txt) not found", priority: .error)
             return
         }
         
         let logFileURL = documentsDirectory.appendingPathComponent("log.txt")
         
         do {
-            let textToWrite = "\(Date()): \(text)\n"
+            let textToWrite = "\(Date()): \(log)\n"
             
             if let fileHandle = FileHandle(forWritingAtPath: logFileURL.path) {
                 fileHandle.seekToEndOfFile()
@@ -69,26 +75,44 @@ extension Logger {
                 try textToWrite.write(to: logFileURL, atomically: true, encoding: .utf8)
             }
             
-            print("Log successfully appended to file!")
-            
+            self.log(for: .statisticsLogging, with: "Log successfully appended to file!", priority: .default)
+
         } catch {
-            print("Failed to write log to file: \(error.localizedDescription)")
+            self.log(for: .statisticsLogging, with: "Failed to write log to file: \(error.localizedDescription)", priority: .error)
         }
-        #endif
+#endif
     }
-    
+    /// Check contents of log.txt file.
+    ///
     private static func checkFileContent() {
         guard let fileURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("log.txt") else {
-            print("Файл не найден")
+            log(for: .statisticsLogging, with: "Log file (log.txt) not found", priority: .error)
             return
         }
         
         do {
             let fileContent = try String(contentsOf: fileURL, encoding: .utf8)
-            print("Содержимое файла:")
-            print(fileContent)
+            log(for: .statisticsLogging, with: "Log file content: \(fileContent)", priority: .default)
+
         } catch {
-            print("Ошибка чтения файла: \(error.localizedDescription)")
+            log(for: .statisticsLogging, with: "Error reading log file content: \(error.localizedDescription)", priority: .error)
+        }
+    }
+    /// Clears log file (log.txt).
+    ///
+    public static func clearLogFile() {
+        guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+            log(for: .statisticsLogging, with: "Log file (log.txt) not found", priority: .error)
+            return
+        }
+        
+        let logFileURL = documentsDirectory.appendingPathComponent("log.txt")
+        
+        do {
+            try FileManager.default.removeItem(at: logFileURL)
+            log(for: .statisticsLogging, with: "Log file cleared successfully", priority: .default)
+        } catch {
+            log(for: .statisticsLogging, with: "Failed to clear log file: \(error.localizedDescription)", priority: .default)
         }
     }
 

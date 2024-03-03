@@ -67,3 +67,15 @@ extension Logger {
         }
     }
 }
+
+public struct TextLogger {
+    func writeLogToFile() {
+#if false    // Логгирование
+        var textLog = TextLog()  // Убрать логгирование при публикации приложения
+        let dateString = Date().toString(format: "dd.MM.yyyy HH:mm:ss")
+        textLog.write("\n\(dateString) \(NSURL.fileURL(withPath: #file).pathComponents.last!):\(#line) -> \(#function) \("didReceive notification")")
+        textLog.write("\n\(dateString) \(NSURL.fileURL(withPath: #file).pathComponents.last!):\(#line) -> \(#function) userInfo: \(userInfo)")
+        print(textLog)
+#endif      // Логгирование
+    }
+}

@@ -46,7 +46,7 @@ extension Logger {
         appendToFile: Bool = false
     ) {
         let logTime = dateFormatter.string(from: Date())
-        let logMessage = "\(iconForCategory(category)) [\(logTime)][\(file.getFileName) on line: \(line)] - \(function)\n LOG MESSAGE:\n \(message)"
+        let logMessage = "\(iconForCategory(category)) [\(logTime)][\(URL(fileURLWithPath: file).deletingPathExtension().lastPathComponent) on line: \(line)] -  \(function)\n LOG MESSAGE:\n \(message)"
         
         os_log("%{public}@", log: OSLog(subsystem: subsystem, category: category.rawValue), type: level, logMessage)
         if appendToFile {
@@ -139,12 +139,5 @@ extension Logger {
         case .privateFileLogging:
             return "♿️"
         }
-    }
-}
-
-extension String {
-    func getFileName() -> String {
-        let url = URL(fileURLWithPath: self)
-        return String.init(describing: url.deletingPathExtension().lastPathComponent) 
     }
 }

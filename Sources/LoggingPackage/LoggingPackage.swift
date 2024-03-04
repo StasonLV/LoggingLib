@@ -20,6 +20,8 @@ extension Logger {
     }
     /// Идентификатор бандла для поиска и фильтрации в Console.app.
     private static var subsystem = Bundle.main.bundleIdentifier!
+    
+    private static let logger = Logger()
     /// Форматтер времени для лог файла.
     private static let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -47,8 +49,8 @@ extension Logger {
     ) {
         let logTime = dateFormatter.string(from: Date())
         let logMessage = "\(iconForCategory(category)) [\(logTime)][\(URL(fileURLWithPath: file).deletingPathExtension().lastPathComponent) on line: \(line)] - \(function) - \(message)"
-        
-        os_log("%{public}@", log: OSLog(subsystem: subsystem, category: category.rawValue), type: level, logMessage)
+        logger.log(level: level, "\(logMessage)")
+//        os_log("%{public}@", log: OSLog(subsystem: subsystem, category: category.rawValue), type: level, logMessage)
         if appendToFile {
             writeLogToFile(log: logMessage)
             checkFileContent()

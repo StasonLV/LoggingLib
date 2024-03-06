@@ -4,7 +4,7 @@
 
 import OSLog
 
-final class Logging {
+final public class Logging {
     
     private var subsystem: String! {
         didSet {

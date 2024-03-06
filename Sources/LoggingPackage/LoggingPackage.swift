@@ -19,52 +19,55 @@ protocol LoggingInterface {
     
     static func showModalView()
 }
-struct ItemRow: View {
-
-    var body: some View {
-        DisclosureGroup {
-            Text("L\no\nr\ne\nm ipsum dolor sit amet. Vel dicta error qui vero incidunt et fugit quisquam aut modi praesentium qui veritatis sed ipsam mag\nnam. Ad iure velit ut possimus voluptatem cum dolores dicta. Ex cupiditate libero ut impedit int\nernos aut reprehenderit molestias! Aut debitis dignissimos sit incidunt internos aut mollitia expli\ncabo aut vitae numquam et repe\nllendus iustoasdasd.")
-                .foregroundColor(.secondary)
-                .font(.caption)
-                .clipped()
-        } label: {
-            Text("Hello world")
+class TextFileReaderModel: ObservableObject {
+    @Published public var data: LocalizedStringKey = ""
+    
+    init(filename: String) { self.load(file: filename) }
+    
+    func load(file: String) {
+        if let filepath = Bundle.main.path(forResource: file, ofType: "txt") {
+            do {
+                let contents = try String(contentsOfFile: filepath)
+                DispatchQueue.main.async {
+                    self.data = LocalizedStringKey(contents)
+                }
+            } catch let error as NSError {
+                print(error.localizedDescription)
+            }
+        } else {
+            print("File not found")
         }
     }
 }
+
 struct LogView: View {
     @State private var selectedCategory: Categories = .networkLogging
-    @State private var fileContent: String = "ывфывйцуйцуйцывфы\nвфывфывфывфвфывыфвыфывфывфывфыоврфывлфыовлрофылasdasdasdasdasdasd\nasdоврфы" // Добавили состояние для хранения содержимого файла
+    @State private var fileContent: String = "213231231dasda\nsdasdas\ndsdffdsfdsdf\ndsadasdsa\nsdasdasd\nsdasdas\nsdasad\nsdasdasa" // Добавили состояние для хранения содержимого файла
+    @ObservedObject var model: TextFileReaderModel = TextFileReaderModel(filename: "socketLogging")
     
     var body: some View {
         List {
-            Section {
+            Section(header: Text("Выберите категорию логов")) {
                 Picker("Category", selection: $selectedCategory) {
                     ForEach(Categories.allCases) { category in
                         Text(category.rawValue.capitalized)
                     }
                 }
             }
-            Section(header: Text("File Content")) {
-                    ItemRow()
+            Section(header: Text("Контент лог файла")) {
+                ScrollView {
+                            VStack(alignment: .leading, spacing: 20) {
+                                Text(model.data).frame(maxWidth: .infinity)
+                            }
+                            .padding()
+                            .navigationBarTitle("Legal Information")
+                        }
             }
         }
-        .listStyle(.insetGrouped)
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
+//        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(.ultraThickMaterial)
     }
-    
-    func calculateTextEditorHeight(_ geometry: GeometryProxy) -> CGFloat {
-        // Задайте здесь ваше условие или формулу для вычисления высоты на основе текста
-        // В примере, высота ячейки будет равна высоте системного фонта умноженного на количество строк в тексте
-        let lineHeight: CGFloat = UIFont.systemFont(ofSize: 17).lineHeight
-        let numberOfLines = CGFloat(fileContent.components(separatedBy: .newlines).count)
-        let calculatedHeight = lineHeight * numberOfLines
-        return max(calculatedHeight, geometry.size.height)
-    }
-
 }
-
 
 #Preview {
     LogView()

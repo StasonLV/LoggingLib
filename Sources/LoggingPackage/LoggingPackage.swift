@@ -32,6 +32,7 @@ struct LogView: View {
                         Text(category.rawValue.capitalized)
                     }
                 }
+                
                 .onChange(of: selectedCategory) { newCategory in
                     // Выполните действие при изменении значения пикера
                     // В этом блоке кода вы можете вызвать метод или задать логику, которая должна быть выполнена при изменении значения
@@ -53,7 +54,7 @@ struct LogView: View {
     }
     
     func getFileContents(category: Categories) -> String {
-        guard let fileURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("socketLogging.txt") else {
+        guard let fileURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("\(category.rawValue).txt") else {
 //            log(for: .privateFileLogging, with: "Log file (socketLogging.txt) not found", priority: .error)
             return ""
         }

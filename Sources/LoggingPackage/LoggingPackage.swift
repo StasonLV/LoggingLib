@@ -40,12 +40,27 @@ struct LogView: View {
             Section(header: Text("Контент лог файла")) {
                 ScrollView {
                     VStack(alignment: .leading, spacing: 20) {
-                        Text(fileContent).frame(maxWidth: .infinity)
+                        Text(getFileContents()).frame(maxWidth: .infinity)
                     }
                 }
             }
         }
         .background(.ultraThickMaterial)
+    }
+    
+    func getFileContents() -> String {
+        guard let fileURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("socketLogging.txt") else {
+//            log(for: .privateFileLogging, with: "Log file (socketLogging.txt) not found", priority: .error)
+            return ""
+        }
+        do {
+            let fileContent = try String(contentsOf: fileURL, encoding: .utf8)
+//            log(for: .privateFileLogging, with: "Log file content:\n\(fileContent)", priority: .default)
+            return fileContent
+        } catch {
+//            log(for: .privateFileLogging, with: "Error reading log file content: \(error.localizedDescription)", priority: .error)
+            return ""
+        }
     }
 }
 
@@ -55,22 +70,9 @@ struct LogView: View {
 
 final public class Logging: LoggingInterface {
     public static func showModalView() {
-        var content = ""
-        guard let fileURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("socketLogging.txt") else {
-            log(for: .privateFileLogging, with: "Log file (socketLogging.txt) not found", priority: .error)
-            return
-        }
-        do {
-            let fileContent = try String(contentsOf: fileURL, encoding: .utf8)
-            log(for: .privateFileLogging, with: "Log file content:\n\(fileContent)", priority: .default)
-            content = fileContent
-        } catch {
-            log(for: .privateFileLogging, with: "Error reading log file content: \(error.localizedDescription)", priority: .error)
-        }
+
         let contentView = LogView()
-        
-        contentView.$fileContent.wrappedValue = content
-        
+                
         let modalView = AnyView(contentView)
         
         let hostingController = UIHostingController(rootView: modalView)

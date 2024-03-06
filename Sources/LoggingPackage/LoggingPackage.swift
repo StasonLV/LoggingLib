@@ -57,6 +57,9 @@ struct LogView: View {
                         ScrollView {
                             VStack(alignment: .leading, spacing: 20) {
                                 Text(logText).frame(maxWidth: .infinity)
+                                    .onTapGesture {
+                                        UIPasteboard.general.string = logText
+                                }
                             }
                         }
                     }

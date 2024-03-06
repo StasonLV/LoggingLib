@@ -32,13 +32,19 @@ struct LogView: View {
                         Text(category.rawValue.capitalized)
                     }
                 }
+                .onChange(of: selectedCategory) { newCategory in
+                    // Выполните действие при изменении значения пикера
+                    // В этом блоке кода вы можете вызвать метод или задать логику, которая должна быть выполнена при изменении значения
+                    print("Выбрана новая категория: \(newCategory.rawValue)")
+                    getFileContents(category: newCategory)
+                }
             }
             .background(Color.clear)
             
             Section(header: Text("Контент лог файла")) {
                 ScrollView {
                     VStack(alignment: .leading, spacing: 20) {
-                        Text(getFileContents()).frame(maxWidth: .infinity)
+                        Text(logText).frame(maxWidth: .infinity)
                     }
                 }
             }
@@ -46,7 +52,7 @@ struct LogView: View {
         .background(.ultraThickMaterial)
     }
     
-    func getFileContents() -> String {
+    func getFileContents(category: Categories) -> String {
         guard let fileURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("socketLogging.txt") else {
 //            log(for: .privateFileLogging, with: "Log file (socketLogging.txt) not found", priority: .error)
             return ""

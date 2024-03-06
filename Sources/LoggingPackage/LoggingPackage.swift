@@ -55,6 +55,8 @@ struct LogView: View {
                     }
                 }
             }
+            .background(Color.clear)
+            
             Section(header: Text("Контент лог файла")) {
                 ScrollView {
                             VStack(alignment: .leading, spacing: 20) {
@@ -64,7 +66,6 @@ struct LogView: View {
                         }
             }
         }
-//        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(.ultraThickMaterial)
     }
 }
@@ -86,7 +87,7 @@ final public class Logging: LoggingInterface {
         do {
             let fileContent = try String(contentsOf: fileURL, encoding: .utf8)
             log(for: .privateFileLogging, with: "Log file content:\n\(fileContent)", priority: .default)
-            contentView.fileContent = fileContent
+            contentView.setLogText(text: fileContent)
         } catch {
             log(for: .privateFileLogging, with: "Error reading log file content: \(error.localizedDescription)", priority: .error)
         }

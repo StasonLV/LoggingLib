@@ -19,25 +19,52 @@ protocol LoggingInterface {
     
     static func showModalView()
 }
-
-struct LogView: View {
-    @State private var selectedPlanet: Categories = .networkLogging
+struct ItemRow: View {
 
     var body: some View {
-        VStack(content: {
-            Picker("Planet", selection: $selectedPlanet) {
-                ForEach(Categories.allCases) { planet in
-                    Text(planet.rawValue.capitalized)
-                }
-            }
-            Text("ModalView")
-                .font(.largeTitle)
-        })
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(.ultraThickMaterial)
-        .background(Color.clear)
+        DisclosureGroup {
+            Text("L\no\nr\ne\nm ipsum dolor sit amet. Vel dicta error qui vero incidunt et fugit quisquam aut modi praesentium qui veritatis sed ipsam mag\nnam. Ad iure velit ut possimus voluptatem cum dolores dicta. Ex cupiditate libero ut impedit int\nernos aut reprehenderit molestias! Aut debitis dignissimos sit incidunt internos aut mollitia expli\ncabo aut vitae numquam et repe\nllendus iustoasdasd.")
+                .foregroundColor(.secondary)
+                .font(.caption)
+                .clipped()
+        } label: {
+            Text("Hello world")
+        }
     }
 }
+struct LogView: View {
+    @State private var selectedCategory: Categories = .networkLogging
+    @State private var fileContent: String = "ывфывйцуйцуйцывфы\nвфывфывфывфвфывыфвыфывфывфывфыоврфывлфыовлрофылasdasdasdasdasdasd\nasdоврфы" // Добавили состояние для хранения содержимого файла
+    
+    var body: some View {
+        List {
+            Section {
+                Picker("Category", selection: $selectedCategory) {
+                    ForEach(Categories.allCases) { category in
+                        Text(category.rawValue.capitalized)
+                    }
+                }
+            }
+            Section(header: Text("File Content")) {
+                    ItemRow()
+            }
+        }
+        .listStyle(.insetGrouped)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(.ultraThickMaterial)
+    }
+    
+    func calculateTextEditorHeight(_ geometry: GeometryProxy) -> CGFloat {
+        // Задайте здесь ваше условие или формулу для вычисления высоты на основе текста
+        // В примере, высота ячейки будет равна высоте системного фонта умноженного на количество строк в тексте
+        let lineHeight: CGFloat = UIFont.systemFont(ofSize: 17).lineHeight
+        let numberOfLines = CGFloat(fileContent.components(separatedBy: .newlines).count)
+        let calculatedHeight = lineHeight * numberOfLines
+        return max(calculatedHeight, geometry.size.height)
+    }
+
+}
+
 
 #Preview {
     LogView()

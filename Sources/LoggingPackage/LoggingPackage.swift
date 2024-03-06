@@ -29,7 +29,7 @@ struct LogView: View {
     var body: some View {
         List {
             Section(header: Text("Выберите категорию логов")) {
-                Picker("Category", selection: $selectedCategory) {
+                Picker("Категория", selection: $selectedCategory) {
                     ForEach(Categories.allCases) { category in
                         Text(category.rawValue.capitalized)
                     }
@@ -39,11 +39,10 @@ struct LogView: View {
             
             Section(header: Text("Контент лог файла")) {
                 ScrollView {
-                            VStack(alignment: .leading, spacing: 20) {
-                                Text(fileContent).frame(maxWidth: .infinity)
-                            }
-                            .navigationBarTitle("Legal Information")
-                        }
+                    VStack(alignment: .leading, spacing: 20) {
+                        Text(fileContent).frame(maxWidth: .infinity)
+                    }
+                }
             }
         }
         .background(.ultraThickMaterial)

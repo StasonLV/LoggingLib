@@ -22,35 +22,41 @@ protocol LoggingInterface {
 
 struct LogView: View {
     @State private var selectedCategory: Categories = .networkLogging
-    @State var logText: String = "213231231dasda\nsdasdas\ndsdffdsfdsdf\ndsadsadasdas32123123132123123123133212312312322312312312231231231231231231321dsadasdasdasdasdasdasdadsasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdaasdsa\nsdasdasd\nsdasdas\nsdasad\nsdasdasa132123\n321312312213231231dasda\nsdasdas\ndsdffdsfdsdf\ndsadsadasdas32123123132123123123133212312312322312312312231231231231231231321dsadasdasdasdasdasdasdadsasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdaasdsa\nsdasdasd\nsdasdas\nsdasad\nsdasdasa132123\n321312312213231231dasda\nsdasdas\ndsdffdsfdsdf\ndsadsadasdas32123123132123123123133212312312322312312312231231231231231231321dsadasdasdasdasdasdasdadsasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdaasdsa\nsdasdasd\nsdasdas\nsdasad\nsdasdasa132123\n321312312" // Добавили состояние для хранения содержимого файла
+    @State var logText: String = "" // Добавили состояние для хранения содержимого файла
 
     var body: some View {
         List {
             Section(header: Text("Выберите категорию логов")) {
-                Picker("Категория", selection: $selectedCategory) {
+                Picker("Категория", selection: $selectedCategory.animation()) {
                     ForEach(Categories.allCases) { category in
                         Text(category.rawValue.capitalized)
                     }
                 }
-                
+                .onAppear(perform: {
+                    getFileContents(category: selectedCategory)
+                })
                 .onChange(of: selectedCategory) { newCategory in
-                    // Выполните действие при изменении значения пикера
-                    // В этом блоке кода вы можете вызвать метод или задать логику, которая должна быть выполнена при изменении значения
-                    print("Выбрана новая категория: \(newCategory.rawValue)")
                     getFileContents(category: newCategory)
                 }
             }
             .background(Color.clear)
             
-            Section(header: Text("Контент лог файла")) {
-                ScrollView {
-                    VStack(alignment: .leading, spacing: 20) {
-                        Text(logText).frame(maxWidth: .infinity)
+            if logText != "" {
+                
+                Section(header: Text("Контент лог файла")) {
+                    ScrollView {
+                        VStack(alignment: .leading, spacing: 20) {
+                            Text(logText).frame(maxWidth: .infinity)
+                                .font(.system(size: 14, weight: .light)) // Устанавливаем размер и вес шрифта
+                                .foregroundColor(.gray)
+                        }
                     }
                 }
-            }
-        }
-        .background(.ultraThickMaterial)
+            } else {
+                            Text("Лог файл пуст").frame(maxWidth: .infinity)
+                        }
+                    }
+            .background(.ultraThickMaterial)
     }
     
     func getFileContents(category: Categories) {

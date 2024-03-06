@@ -6,36 +6,36 @@ import OSLog
 
 final public class Logging {
     
-    private var subsystem: String! {
+    private static var subsystem: String! {
         didSet {
             makeLoggers()
         }
     }
-    private var networkLogger: Logger?
-    private var viewcycleLogger: Logger?
-    private var userInterfaceLogger: Logger?
-    private var statisticsLogger: Logger?
-    private var privateFileLogger: Logger?
-    private var socketLogger: Logger?
+    private static var networkLogger: Logger?
+    private static var viewcycleLogger: Logger?
+    private static var userInterfaceLogger: Logger?
+    private static var statisticsLogger: Logger?
+    private static var privateFileLogger: Logger?
+    private static var socketLogger: Logger?
     
     public init() {
-        self.subsystem = Bundle.main.bundleIdentifier ?? "undefinedSubsystemBundle"
+        Logging.subsystem = Bundle.main.bundleIdentifier ?? "undefinedSubsystemBundle"
     }
     
     deinit {
         print("Logger DEINITIALIZED")
     }
     
-    private func makeLoggers() {
-        self.networkLogger = Logger(subsystem: subsystem, category: Categories.networkLogging.rawValue)
-        self.viewcycleLogger = Logger(subsystem: subsystem, category: Categories.viewcycleLogging.rawValue)
-        self.userInterfaceLogger = Logger(subsystem: subsystem, category: Categories.userInterfaceLogging.rawValue)
-        self.statisticsLogger = Logger(subsystem: subsystem, category: Categories.statisticsLogging.rawValue)
-        self.privateFileLogger = Logger(subsystem: subsystem, category: Categories.privateFileLogging.rawValue)
-        self.socketLogger = Logger(subsystem: subsystem, category: Categories.socketLogging.rawValue)
+    private static func makeLoggers() {
+        Logging.networkLogger = Logger(subsystem: subsystem, category: Categories.networkLogging.rawValue)
+        Logging.viewcycleLogger = Logger(subsystem: subsystem, category: Categories.viewcycleLogging.rawValue)
+        Logging.userInterfaceLogger = Logger(subsystem: subsystem, category: Categories.userInterfaceLogging.rawValue)
+        Logging.statisticsLogger = Logger(subsystem: subsystem, category: Categories.statisticsLogging.rawValue)
+        Logging.privateFileLogger = Logger(subsystem: subsystem, category: Categories.privateFileLogging.rawValue)
+        Logging.socketLogger = Logger(subsystem: subsystem, category: Categories.socketLogging.rawValue)
     }
     
-    private func getLogger(for category: Categories) -> Logger {
+    private static func getLogger(for category: Categories) -> Logger {
         switch category {
         case .viewcycleLogging:
             return viewcycleLogger ?? Logger(subsystem: self.subsystem!, category: category.rawValue)
@@ -52,7 +52,7 @@ final public class Logging {
         }
     }
     
-    private let dateFormatter: DateFormatter = {
+    private static let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "HH:mm:ss"
         return formatter
@@ -67,7 +67,7 @@ final public class Logging {
     ///   - function: The function name. By default, it is automatically filled with the calling function name.
     ///   - line: The line number. By default, it is automatically filled with the calling line number.
     ///   - appendToFile: Specify if you want to add it to log.txt file.
-    public func log(
+    public static func log(
         for category: Categories,
         with message: String,
         priority level: OSLogType,
@@ -80,10 +80,6 @@ final public class Logging {
         let logMessage = "\(iconForCategory(category)) [\(logTime)][\(URL(fileURLWithPath: file).deletingPathExtension().lastPathComponent) on line: \(line)] - \(function)\n LOG MESSAGE:\n\(message)"
         
         let logger = getLogger(for: category)
-        
-        if appendToFile {
-            writeLogToFile(log: logMessage, for: category)
-        }
         
         switch level {
         case .fault:
@@ -104,13 +100,17 @@ final public class Logging {
         default:
             logger.log("\(logMessage)")
         }
+        
+        if appendToFile {
+            writeLogToFile(log: logMessage, for: category)
+        }
     }
     
     /// Write log message into log.txt file with the specified category, message, priority, and additional information.
     ///
     /// - Parameters:
     ///   - log: Content of the log file.
-    private func writeLogToFile(log: String, for category: Categories) {
+    private static func writeLogToFile(log: String, for category: Categories) {
 #if DEBUG
         guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
             self.log(for: .privateFileLogging, with: "Log file (log.txt) not found", priority: .error)
@@ -139,7 +139,7 @@ final public class Logging {
     }
     /// Check contents of log.txt file.
     ///
-    private func checkFileContent() {
+    private static func checkFileContent() {
         guard let fileURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("log.txt") else {
             log(for: .privateFileLogging, with: "Log file (log.txt) not found", priority: .error)
             return
@@ -154,7 +154,7 @@ final public class Logging {
         }
     }
     
-    internal func iconForCategory(_ category: Categories) -> String {
+    internal static func iconForCategory(_ category: Categories) -> String {
         switch category {
         case .viewcycleLogging:
             return "🔄"

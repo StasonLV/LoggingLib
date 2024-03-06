@@ -57,6 +57,7 @@ struct LogView: View {
                     .foregroundColor(.gray)
             }
         }
+        .listRowBackground(Color.clear)
         .background(Color.clear)
     }
     

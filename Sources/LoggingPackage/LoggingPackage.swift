@@ -28,6 +28,7 @@ final public class Logging: LoggingInterface {
         subsystem = Bundle.main.bundleIdentifier ?? "undefinedSubsystemBundle"
         return instance
     }()
+    static weak var sharedWeakInstance: Logging? = sharedInstance
 
     private static var networkLogger: Logger?
     private static var viewcycleLogger: Logger?
@@ -100,7 +101,11 @@ final public class Logging: LoggingInterface {
         line: Int = #line,
         appendToFile: Bool = false
     ) {
-        let _ = sharedInstance
+//        let _ = sharedInstance
+        guard let myInstance = sharedWeakInstance else {
+            return
+        }
+
         let logTime = dateFormatter.string(from: Date())
         let logMessage = "\(iconForCategory(category)) [\(logTime)][\(URL(fileURLWithPath: file).deletingPathExtension().lastPathComponent) on line: \(line)] - \(function)\n LOG MESSAGE:\n\(message)"
         

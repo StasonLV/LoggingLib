@@ -6,10 +6,10 @@ import PackageDescription
 let package = Package(
     name: "LoggingPackage",
     platforms: [
-        .iOS(.v14),
+        .iOS(.v15),
         .macOS(.v10_15),
         .watchOS(.v7),
-        .tvOS(.v14)
+        .tvOS(.v15)
     ],
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.

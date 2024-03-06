@@ -20,14 +20,26 @@ protocol LoggingInterface {
     static func showModalView()
 }
 
+struct LogView: View {
+    var body: some View {
+        VStack(content: {
+            Text("ModalView")
+                .font(.largeTitle)
+        })
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(.ultraThinMaterial)
+    }
+}
+
+#Preview {
+    LogView()
+}
+
 final public class Logging: LoggingInterface {
     public static func showModalView() {
         let redColor = Color.red
         
-        let contentView = Text("Modal View")
-            .font(.largeTitle)
-            .foregroundColor(.white)
-            .background(redColor)
+        let contentView = LogView()
         
         let modalView = AnyView(contentView)
         

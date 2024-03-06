@@ -21,13 +21,21 @@ protocol LoggingInterface {
 }
 
 struct LogView: View {
+    @State private var selectedPlanet: Categories = .networkLogging
+
     var body: some View {
         VStack(content: {
+            Picker("Planet", selection: $selectedPlanet) {
+                ForEach(Categories.allCases) { planet in
+                    Text(planet.rawValue.capitalized)
+                }
+            }
             Text("ModalView")
                 .font(.largeTitle)
         })
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(.ultraThickMaterial)
+        .background(Color.clear)
     }
 }
 
@@ -37,14 +45,13 @@ struct LogView: View {
 
 final public class Logging: LoggingInterface {
     public static func showModalView() {
-        let redColor = Color.red
-        
         let contentView = LogView()
         
         let modalView = AnyView(contentView)
         
         let hostingController = UIHostingController(rootView: modalView)
         hostingController.modalPresentationStyle = .formSheet
+        hostingController.sheetPresentationController?.prefersGrabberVisible = true
         UIApplication.shared.windows.first?.rootViewController?.present(hostingController, animated: true, completion: nil)
     }
 
@@ -225,7 +232,9 @@ final public class Logging: LoggingInterface {
     }
 }
 
-public enum Categories: String {
+public enum Categories: String, CaseIterable, Identifiable {
+    public var id: Self { self }
+    
     /// - viewcycleLogging: Логирование событий жизненного цикла контроллеров или приложения.
     case viewcycleLogging = "viewcycleLogging"
     /// - userInterfaceLogging: Логирование событий пользовательского интерфейса.

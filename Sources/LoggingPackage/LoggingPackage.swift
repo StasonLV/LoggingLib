@@ -11,6 +11,12 @@ final public class Logging {
             makeLoggers()
         }
     }
+    static let sharedInstance: Logging = {
+        let instance = Logging()
+        subsystem = Bundle.main.bundleIdentifier ?? "undefinedSubsystemBundle"
+        return instance
+    }()
+
     private static var networkLogger: Logger?
     private static var viewcycleLogger: Logger?
     private static var userInterfaceLogger: Logger?
@@ -18,7 +24,7 @@ final public class Logging {
     private static var privateFileLogger: Logger?
     private static var socketLogger: Logger?
     
-    public init() {
+    init() {
         Logging.subsystem = Bundle.main.bundleIdentifier ?? "undefinedSubsystemBundle"
     }
     
@@ -38,17 +44,17 @@ final public class Logging {
     private static func getLogger(for category: Categories) -> Logger {
         switch category {
         case .viewcycleLogging:
-            return viewcycleLogger ?? Logger(subsystem: self.subsystem!, category: category.rawValue)
+            return viewcycleLogger ?? Logger(subsystem: subsystem, category: category.rawValue)
         case .userInterfaceLogging:
-            return userInterfaceLogger ?? Logger(subsystem: self.subsystem!, category: category.rawValue)
+            return userInterfaceLogger ?? Logger(subsystem: subsystem, category: category.rawValue)
         case .networkLogging:
-            return networkLogger ?? Logger(subsystem: self.subsystem!, category: category.rawValue)
+            return networkLogger ?? Logger(subsystem: subsystem, category: category.rawValue)
         case .statisticsLogging:
-            return statisticsLogger ?? Logger(subsystem: self.subsystem!, category: category.rawValue)
+            return statisticsLogger ?? Logger(subsystem: subsystem, category: category.rawValue)
         case .privateFileLogging:
-            return privateFileLogger ?? Logger(subsystem: self.subsystem!, category: category.rawValue)
+            return privateFileLogger ?? Logger(subsystem: subsystem, category: category.rawValue)
         case .socketLogging:
-            return socketLogger ?? Logger(subsystem: self.subsystem!, category: category.rawValue)
+            return socketLogger ?? Logger(subsystem: subsystem, category: category.rawValue)
         }
     }
     
@@ -76,6 +82,7 @@ final public class Logging {
         line: Int = #line,
         appendToFile: Bool = false
     ) {
+        let myInstance = sharedInstance
         let logTime = dateFormatter.string(from: Date())
         let logMessage = "\(iconForCategory(category)) [\(logTime)][\(URL(fileURLWithPath: file).deletingPathExtension().lastPathComponent) on line: \(line)] - \(function)\n LOG MESSAGE:\n\(message)"
         

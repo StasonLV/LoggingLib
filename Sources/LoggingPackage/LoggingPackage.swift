@@ -42,9 +42,10 @@ class TextFileReaderModel: ObservableObject {
 
 struct LogView: View {
     @State private var selectedCategory: Categories = .networkLogging
-    @State private var fileContent: String = "213231231dasda\nsdasdas\ndsdffdsfdsdf\ndsadasdsa\nsdasdasd\nsdasdas\nsdasad\nsdasdasa" // Добавили состояние для хранения содержимого файла
-    @ObservedObject var model: TextFileReaderModel = TextFileReaderModel(filename: "socketLogging")
-    
+    @State var fileContent: String = "213231231dasda\nsdasdas\ndsdffdsfdsdf\ndsadsadasdas32123123132123123123133212312312322312312312231231231231231231321dsadasdasdasdasdasdasdadsasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdaasdsa\nsdasdasd\nsdasdas\nsdasad\nsdasdasa132123\n321312312213231231dasda\nsdasdas\ndsdffdsfdsdf\ndsadsadasdas32123123132123123123133212312312322312312312231231231231231231321dsadasdasdasdasdasdasdadsasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdaasdsa\nsdasdasd\nsdasdas\nsdasad\nsdasdasa132123\n321312312213231231dasda\nsdasdas\ndsdffdsfdsdf\ndsadsadasdas32123123132123123123133212312312322312312312231231231231231231321dsadasdasdasdasdasdasdadsasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdaasdsa\nsdasdasd\nsdasdas\nsdasad\nsdasdasa132123\n321312312" // Добавили состояние для хранения содержимого файла
+    func setLogText(text: String) {
+        fileContent = text
+    }
     var body: some View {
         List {
             Section(header: Text("Выберите категорию логов")) {
@@ -57,9 +58,8 @@ struct LogView: View {
             Section(header: Text("Контент лог файла")) {
                 ScrollView {
                             VStack(alignment: .leading, spacing: 20) {
-                                Text(model.data).frame(maxWidth: .infinity)
+                                Text(fileContent).frame(maxWidth: .infinity)
                             }
-                            .padding()
                             .navigationBarTitle("Legal Information")
                         }
             }
@@ -79,6 +79,18 @@ final public class Logging: LoggingInterface {
         
         let modalView = AnyView(contentView)
         
+        guard let fileURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("socketLogging.txt") else {
+            log(for: .privateFileLogging, with: "Log file (socketLogging.txt) not found", priority: .error)
+            return
+        }
+        do {
+            let fileContent = try String(contentsOf: fileURL, encoding: .utf8)
+            log(for: .privateFileLogging, with: "Log file content:\n\(fileContent)", priority: .default)
+            contentView.fileContent = fileContent
+        } catch {
+            log(for: .privateFileLogging, with: "Error reading log file content: \(error.localizedDescription)", priority: .error)
+        }
+
         let hostingController = UIHostingController(rootView: modalView)
         hostingController.modalPresentationStyle = .formSheet
         hostingController.sheetPresentationController?.prefersGrabberVisible = true
@@ -221,7 +233,7 @@ final public class Logging: LoggingInterface {
             }
             
             self.log(for: .privateFileLogging, with: "Log successfully appended to file \(logFileURL)", priority: .default)
-
+            
         } catch {
             self.log(for: .privateFileLogging, with: "Failed to write log to file: \(error.localizedDescription)", priority: .error)
         }
@@ -238,7 +250,7 @@ final public class Logging: LoggingInterface {
         do {
             let fileContent = try String(contentsOf: fileURL, encoding: .utf8)
             log(for: .privateFileLogging, with: "Log file content:\n\(fileContent)", priority: .default)
-
+            
         } catch {
             log(for: .privateFileLogging, with: "Error reading log file content: \(error.localizedDescription)", priority: .error)
         }

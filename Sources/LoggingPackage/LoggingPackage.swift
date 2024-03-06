@@ -81,6 +81,10 @@ final public class Logging {
         
         let logger = getLogger(for: category)
         
+        if appendToFile {
+            writeLogToFile(log: logMessage, for: category)
+        }
+        
         switch level {
         case .fault:
             logger.critical("\(logMessage)")

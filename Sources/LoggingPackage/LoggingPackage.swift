@@ -17,11 +17,11 @@ protocol LoggingInterface {
         appendToFile: Bool
     )
     
-    static func showModalView()
+    static func showModalView(on viewController: UIViewController)
 }
 
 final public class Logging: LoggingInterface {
-    public static func showModalView() {
+    public static func showModalView(on viewController: UIViewController) {
         let redColor = Color.red
         
         let contentView = Text("Modal View")
@@ -33,8 +33,9 @@ final public class Logging: LoggingInterface {
         
         let hostingController = UIHostingController(rootView: modalView)
         hostingController.modalPresentationStyle = .fullScreen
-        UIApplication.shared.windows.first?.rootViewController?.present(hostingController, animated: true, completion: nil)
+        viewController.present(hostingController, animated: true, completion: nil)
     }
+
 
     private static var subsystem: String! {
         didSet {

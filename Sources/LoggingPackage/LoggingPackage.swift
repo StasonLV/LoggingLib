@@ -52,6 +52,7 @@ final public class Logging: LoggingInterface {
         let hostingController = UIHostingController(rootView: modalView)
         hostingController.modalPresentationStyle = .formSheet
         hostingController.sheetPresentationController?.prefersGrabberVisible = true
+        hostingController.view.backgroundColor = .clear
         UIApplication.shared.windows.first?.rootViewController?.present(hostingController, animated: true, completion: nil)
     }
 

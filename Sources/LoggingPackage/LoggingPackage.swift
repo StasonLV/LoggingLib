@@ -22,7 +22,7 @@ protocol LoggingInterface {
 
 struct LogView: View {
     @State private var selectedCategory: Categories = .networkLogging
-    @State var logText: String = "" // Добавили состояние для хранения содержимого файла
+    @State var logText: String = ""
 
     var body: some View {
         List {
@@ -47,16 +47,17 @@ struct LogView: View {
                     ScrollView {
                         VStack(alignment: .leading, spacing: 20) {
                             Text(logText).frame(maxWidth: .infinity)
-                                .font(.system(size: 14, weight: .light)) // Устанавливаем размер и вес шрифта
-                                .foregroundColor(.gray)
                         }
                     }
                 }
+                .background(Color.clear)
             } else {
-                            Text("Лог файл пуст").frame(maxWidth: .infinity)
-                        }
-                    }
-            .background(.ultraThickMaterial)
+                Text("Лог файл пуст").frame(maxWidth: .infinity)
+                    .font(.system(size: 14, weight: .light))
+                    .foregroundColor(.gray)
+            }
+        }
+        .background(Color.clear)
     }
     
     func getFileContents(category: Categories) {

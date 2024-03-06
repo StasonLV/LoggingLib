@@ -19,26 +19,6 @@ protocol LoggingInterface {
     
     static func showModalView()
 }
-class TextFileReaderModel: ObservableObject {
-    @Published public var data: LocalizedStringKey = ""
-    
-    init(filename: String) { self.load(file: filename) }
-    
-    func load(file: String) {
-        if let filepath = Bundle.main.path(forResource: file, ofType: "txt") {
-            do {
-                let contents = try String(contentsOfFile: filepath)
-                DispatchQueue.main.async {
-                    self.data = LocalizedStringKey(contents)
-                }
-            } catch let error as NSError {
-                print(error.localizedDescription)
-            }
-        } else {
-            print("File not found")
-        }
-    }
-}
 
 struct LogView: View {
     @State private var selectedCategory: Categories = .networkLogging
@@ -76,10 +56,7 @@ struct LogView: View {
 
 final public class Logging: LoggingInterface {
     public static func showModalView() {
-        let contentView = LogView()
-        
-        let modalView = AnyView(contentView)
-        
+        var content = ""
         guard let fileURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("socketLogging.txt") else {
             log(for: .privateFileLogging, with: "Log file (socketLogging.txt) not found", priority: .error)
             return
@@ -87,10 +64,15 @@ final public class Logging: LoggingInterface {
         do {
             let fileContent = try String(contentsOf: fileURL, encoding: .utf8)
             log(for: .privateFileLogging, with: "Log file content:\n\(fileContent)", priority: .default)
-            contentView.setLogText(text: fileContent)
+            content = fileContent
         } catch {
             log(for: .privateFileLogging, with: "Error reading log file content: \(error.localizedDescription)", priority: .error)
         }
+        let contentView = LogView(fileContent: content)
+        
+        let modalView = AnyView(contentView)
+        
+        
 
         let hostingController = UIHostingController(rootView: modalView)
         hostingController.modalPresentationStyle = .formSheet

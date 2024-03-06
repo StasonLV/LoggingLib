@@ -19,47 +19,58 @@ protocol LoggingInterface {
     
     static func showModalView()
 }
+struct ListBackgroundModifier: ViewModifier {
 
+    @ViewBuilder
+    func body(content: Content) -> some View {
+        if #available(iOS 16.0, *) {
+            content
+                .scrollContentBackground(.hidden)
+        } else {
+            content
+        }
+    }
+}
 struct LogView: View {
     @State private var selectedCategory: Categories = .networkLogging
     @State var logText: String = ""
 
     var body: some View {
-        List {
-            Section(header: Text("Выберите категорию логов")) {
-                Picker("Категория", selection: $selectedCategory.animation()) {
-                    ForEach(Categories.allCases) { category in
-                        Text(category.rawValue.capitalized)
-                    }
-                }
-                .onAppear(perform: {
-                    getFileContents(category: selectedCategory)
-                })
-                .onChange(of: selectedCategory) { newCategory in
-                    getFileContents(category: newCategory)
-                }
-            }
-            .listRowBackground(Color.clear)
-
-            if logText != "" {
-                Section(header: Text("Контент лог файла")) {
-                    ScrollView {
-                        VStack(alignment: .leading, spacing: 20) {
-                            Text(logText).frame(maxWidth: .infinity)
+            List {
+                Section(header: Text("Выберите категорию логов")) {
+                    Picker("Категория", selection: $selectedCategory.animation()) {
+                        ForEach(Categories.allCases) { category in
+                            Text(category.rawValue.capitalized)
                         }
                     }
+                    .onAppear(perform: {
+                        getFileContents(category: selectedCategory)
+                    })
+                    .onChange(of: selectedCategory) { newCategory in
+                        getFileContents(category: newCategory)
+                    }
                 }
-            } else {
+                //            .listRowBackground(Color.clear)
+                
+                if logText != "" {
+                    Section(header: Text("Контент лог файла")) {
+                        ScrollView {
+                            VStack(alignment: .leading, spacing: 20) {
+                                Text(logText).frame(maxWidth: .infinity)
+                            }
+                        }
+                    }
+                } else {
                     Text("Лог файл пуст")
                         .font(.system(size: 14, weight: .light))
                         .foregroundColor(.gray)
                         .multilineTextAlignment(.center)
+                }
             }
-        }
-        .listStyle(InsetGroupedListStyle()) // Используем стиль .insetGrouped для таблицы
-        .background(.ultraThinMaterial)
+            .listStyle(InsetGroupedListStyle()) // Используем стиль .insetGrouped для таблицы
+            .modifier(ListBackgroundModifier())
+            .background(.ultraThinMaterial)
     }
-
     
     func getFileContents(category: Categories) {
         guard let fileURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("\(category.rawValue).txt") else {

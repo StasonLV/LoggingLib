@@ -22,10 +22,8 @@ protocol LoggingInterface {
 
 struct LogView: View {
     @State private var selectedCategory: Categories = .networkLogging
-    @State var fileContent: String = "213231231dasda\nsdasdas\ndsdffdsfdsdf\ndsadsadasdas32123123132123123123133212312312322312312312231231231231231231321dsadasdasdasdasdasdasdadsasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdaasdsa\nsdasdasd\nsdasdas\nsdasad\nsdasdasa132123\n321312312213231231dasda\nsdasdas\ndsdffdsfdsdf\ndsadsadasdas32123123132123123123133212312312322312312312231231231231231231321dsadasdasdasdasdasdasdadsasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdaasdsa\nsdasdasd\nsdasdas\nsdasad\nsdasdasa132123\n321312312213231231dasda\nsdasdas\ndsdffdsfdsdf\ndsadsadasdas32123123132123123123133212312312322312312312231231231231231231321dsadasdasdasdasdasdasdadsasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdaasdsa\nsdasdasd\nsdasdas\nsdasad\nsdasdasa132123\n321312312" // Добавили состояние для хранения содержимого файла
-    func setLogText(text: String) {
-        fileContent = text
-    }
+    @State var logText: String = "213231231dasda\nsdasdas\ndsdffdsfdsdf\ndsadsadasdas32123123132123123123133212312312322312312312231231231231231231321dsadasdasdasdasdasdasdadsasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdaasdsa\nsdasdasd\nsdasdas\nsdasad\nsdasdasa132123\n321312312213231231dasda\nsdasdas\ndsdffdsfdsdf\ndsadsadasdas32123123132123123123133212312312322312312312231231231231231231321dsadasdasdasdasdasdasdadsasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdaasdsa\nsdasdasd\nsdasdas\nsdasad\nsdasdasa132123\n321312312213231231dasda\nsdasdas\ndsdffdsfdsdf\ndsadsadasdas32123123132123123123133212312312322312312312231231231231231231321dsadasdasdasdasdasdasdadsasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdaasdsa\nsdasdasd\nsdasdas\nsdasad\nsdasdasa132123\n321312312" // Добавили состояние для хранения содержимого файла
+
     var body: some View {
         List {
             Section(header: Text("Выберите категорию логов")) {
@@ -56,6 +54,7 @@ struct LogView: View {
         do {
             let fileContent = try String(contentsOf: fileURL, encoding: .utf8)
 //            log(for: .privateFileLogging, with: "Log file content:\n\(fileContent)", priority: .default)
+            logText = fileContent
             return fileContent
         } catch {
 //            log(for: .privateFileLogging, with: "Error reading log file content: \(error.localizedDescription)", priority: .error)

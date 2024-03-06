@@ -39,10 +39,9 @@ struct LogView: View {
                     getFileContents(category: newCategory)
                 }
             }
-            .background(Color.clear)
-            
+            .listRowBackground(Color.clear)
+
             if logText != "" {
-                
                 Section(header: Text("Контент лог файла")) {
                     ScrollView {
                         VStack(alignment: .leading, spacing: 20) {
@@ -50,16 +49,17 @@ struct LogView: View {
                         }
                     }
                 }
-                .background(Color.clear)
             } else {
-                Text("Лог файл пуст").frame(maxWidth: .infinity)
-                    .font(.system(size: 14, weight: .light))
-                    .foregroundColor(.gray)
+                    Text("Лог файл пуст")
+                        .font(.system(size: 14, weight: .light))
+                        .foregroundColor(.gray)
+                        .multilineTextAlignment(.center)
             }
         }
-        .listRowBackground(Color.clear)
-        .background(Color.clear)
+        .listStyle(InsetGroupedListStyle()) // Используем стиль .insetGrouped для таблицы
+        .background(.ultraThinMaterial)
     }
+
     
     func getFileContents(category: Categories) {
         guard let fileURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("\(category.rawValue).txt") else {

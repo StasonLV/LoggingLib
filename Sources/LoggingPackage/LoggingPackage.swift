@@ -102,6 +102,54 @@ final public class Logging {
         }
     }
     
+    /// Write log message into log.txt file with the specified category, message, priority, and additional information.
+    ///
+    /// - Parameters:
+    ///   - log: Content of the log file.
+    private func writeLogToFile(log: String, for category: Categories) {
+#if DEBUG
+        guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+            self.log(for: .privateFileLogging, with: "Log file (log.txt) not found", priority: .error)
+            return
+        }
+        
+        let logFileURL = documentsDirectory.appendingPathComponent("\(category.rawValue).txt")
+        
+        do {
+            let textToWrite = "\(log)\n"
+            
+            if let fileHandle = FileHandle(forWritingAtPath: logFileURL.path) {
+                fileHandle.seekToEndOfFile()
+                fileHandle.write(textToWrite.data(using: .utf8)!)
+                fileHandle.closeFile()
+            } else {
+                try textToWrite.write(to: logFileURL, atomically: true, encoding: .utf8)
+            }
+            
+            self.log(for: .privateFileLogging, with: "Log successfully appended to file \(logFileURL)", priority: .default)
+
+        } catch {
+            self.log(for: .privateFileLogging, with: "Failed to write log to file: \(error.localizedDescription)", priority: .error)
+        }
+#endif
+    }
+    /// Check contents of log.txt file.
+    ///
+    private func checkFileContent() {
+        guard let fileURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("log.txt") else {
+            log(for: .privateFileLogging, with: "Log file (log.txt) not found", priority: .error)
+            return
+        }
+        
+        do {
+            let fileContent = try String(contentsOf: fileURL, encoding: .utf8)
+            log(for: .privateFileLogging, with: "Log file content:\n\(fileContent)", priority: .default)
+
+        } catch {
+            log(for: .privateFileLogging, with: "Error reading log file content: \(error.localizedDescription)", priority: .error)
+        }
+    }
+    
     internal func iconForCategory(_ category: Categories) -> String {
         switch category {
         case .viewcycleLogging:

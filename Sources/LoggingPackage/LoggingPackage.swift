@@ -67,12 +67,12 @@ final public class Logging: LoggingInterface {
         } catch {
             log(for: .privateFileLogging, with: "Error reading log file content: \(error.localizedDescription)", priority: .error)
         }
-        let contentView = LogView(fileContent: content)
+        let contentView = LogView()
+        
+        contentView.$fileContent.wrappedValue = content
         
         let modalView = AnyView(contentView)
         
-        
-
         let hostingController = UIHostingController(rootView: modalView)
         hostingController.modalPresentationStyle = .formSheet
         hostingController.sheetPresentationController?.prefersGrabberVisible = true

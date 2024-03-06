@@ -27,7 +27,7 @@ struct LogView: View {
                 .font(.largeTitle)
         })
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(.ultraThinMaterial)
+        .background(.ultraThickMaterial)
     }
 }
 
@@ -44,7 +44,7 @@ final public class Logging: LoggingInterface {
         let modalView = AnyView(contentView)
         
         let hostingController = UIHostingController(rootView: modalView)
-        hostingController.modalPresentationStyle = .fullScreen
+        hostingController.modalPresentationStyle = .formSheet
         UIApplication.shared.windows.first?.rootViewController?.present(hostingController, animated: true, completion: nil)
     }
 

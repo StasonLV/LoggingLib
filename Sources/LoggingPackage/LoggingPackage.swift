@@ -53,19 +53,19 @@ struct LogView: View {
         .background(.ultraThickMaterial)
     }
     
-    func getFileContents(category: Categories) -> String {
+    func getFileContents(category: Categories) {
         guard let fileURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("\(category.rawValue).txt") else {
 //            log(for: .privateFileLogging, with: "Log file (socketLogging.txt) not found", priority: .error)
-            return ""
+            logText = ""
+            return
         }
         do {
             let fileContent = try String(contentsOf: fileURL, encoding: .utf8)
 //            log(for: .privateFileLogging, with: "Log file content:\n\(fileContent)", priority: .default)
             logText = fileContent
-            return fileContent
         } catch {
 //            log(for: .privateFileLogging, with: "Error reading log file content: \(error.localizedDescription)", priority: .error)
-            return ""
+            logText = ""
         }
     }
 }

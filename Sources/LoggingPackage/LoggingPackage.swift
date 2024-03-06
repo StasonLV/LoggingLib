@@ -38,9 +38,11 @@ final public class Logging: LoggingInterface {
     
     init() {
         Logging.subsystem = Bundle.main.bundleIdentifier ?? "undefinedSubsystemBundle"
+        print("Logger INITIALIZED")
     }
     
     deinit {
+        Logging.log(for: .privateFileLogging, with: "LOGGER DEINITIALIZED", priority: .fault)
         print("Logger DEINITIALIZED")
     }
     ///  Создаем логгеры для каждой категории логгирования при первом обращении к функции log()(метод приватный).
@@ -128,7 +130,6 @@ final public class Logging: LoggingInterface {
             writeLogToFile(log: logMessage, for: category)
         }
     }
-    
     /// Write log message into log.txt file with the specified category, message, priority, and additional information.
     ///
     /// - Parameters:
@@ -193,9 +194,8 @@ final public class Logging: LoggingInterface {
             return "📶"
         }
     }
-    
-
 }
+
 public enum Categories: String {
     /// - viewcycleLogging: Логирование событий жизненного цикла контроллеров или приложения.
     case viewcycleLogging = "viewcycleLogging"

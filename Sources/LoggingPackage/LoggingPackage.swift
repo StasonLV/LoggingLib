@@ -64,13 +64,6 @@ struct LogView: View {
 
                             Button(action: {
                                 UIPasteboard.general.string = logText
-                                let alertController = UIAlertController(title: "Текст лога скопирован", message: nil, preferredStyle: .alert)
-                                        UIApplication.shared.windows.first?.rootViewController?.present(alertController, animated: true, completion: nil)
-
-                                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                                            alertController.dismiss(animated: true, completion: nil)
-                                        }
-
                             }) {
                                 Image(systemName: "doc.on.doc")
                             }

@@ -51,7 +51,32 @@ struct LogView: View {
                     }
                 }
                 //            .listRowBackground(Color.clear)
-                
+                Section {
+                    HStack(alignment: .bottom) {
+                            Button(action: {
+                                // Действие при нажатии на первую кнопку
+                            }) {
+                                Image(systemName: "square.and.arrow.up")
+                            }
+                            .frame(maxWidth: .infinity)
+                            
+                            Button(action: {
+                                UIPasteboard.general.string = logText
+                            }) {
+                                Image(systemName: "doc.on.doc")
+                                    .frame(maxWidth: .infinity)
+                            }
+                            
+                            Button(action: {
+                                // Действие при нажатии на третью кнопку
+                            }) {
+                                Image(systemName: "clear")
+                                    .frame(maxWidth: .infinity)
+                            }
+                        }
+                    }
+                .listRowBackground(Color.clear)
+
                 if logText != "" {
                     Section(header: Text("Контент лог файла")) {
                         ScrollView {

@@ -52,30 +52,41 @@ struct LogView: View {
                 }
                 //            .listRowBackground(Color.clear)
                 Section {
-                    HStack(alignment: .bottom) {
+                    HStack(alignment: .center, spacing: 60) {
                             Button(action: {
-                                // Действие при нажатии на первую кнопку
                             }) {
                                 Image(systemName: "square.and.arrow.up")
                             }
-                            .frame(maxWidth: .infinity)
-                            
+                            .foregroundColor(.white)
+                            .frame(width: 50, height: 20)
+                            .padding(10)
+                            .background(Color.primary)
+                            .cornerRadius(10)
+
                             Button(action: {
                                 UIPasteboard.general.string = logText
                             }) {
                                 Image(systemName: "doc.on.doc")
-                                    .frame(maxWidth: .infinity)
                             }
-                            
-                            Button(action: {
-                                // Действие при нажатии на третью кнопку
+                            .foregroundColor(.white)
+                            .frame(width: 50, height: 20)
+                            .padding(10)
+                            .background(Color.primary)
+                            .cornerRadius(10)
+
+                        Button(action: {
                             }) {
                                 Image(systemName: "clear")
-                                    .frame(maxWidth: .infinity)
                             }
+                            .foregroundColor(.white)
+                            .frame(width: 50, height: 20)
+                            .padding(10)
+                            .background(Color.primary)
+                            .cornerRadius(10)
                         }
                     }
                 .listRowBackground(Color.clear)
+                .frame(width: .infinity, height: 20)
 
                 if logText != "" {
                     Section(header: Text("Контент лог файла")) {
@@ -316,15 +327,15 @@ public enum Categories: String, CaseIterable, Identifiable {
     public var id: Self { self }
     
     /// - viewcycleLogging: Логирование событий жизненного цикла контроллеров или приложения.
-    case viewcycleLogging = "viewcycleLogging"
+    case viewcycleLogging = "viewcycle Logging"
     /// - userInterfaceLogging: Логирование событий пользовательского интерфейса.
-    case userInterfaceLogging = "userInterfaceLogging"
+    case userInterfaceLogging = "userInterface Logging"
     /// - networkLogging: Логирование событий сетевого взаимодействия.
-    case networkLogging = "networkLogging"
+    case networkLogging = "network Logging"
     /// - statisticsLogging: Общая категория логирования для неспецифичных событий и статистики.
-    case statisticsLogging = "statisticsLogging"
+    case statisticsLogging = "statistics Logging"
     /// - privateFileLogging: Приватная категория для обработки записи/чтения логов в файл.
-    case privateFileLogging = "privateFileLogging"
+    case privateFileLogging = "privateFile Logging"
     /// - privateFileLogging: Приватная категория для обработки записи/чтения логов в файл.
-    case socketLogging = "socketLogging"
+    case socketLogging = "socket Logging"
 }

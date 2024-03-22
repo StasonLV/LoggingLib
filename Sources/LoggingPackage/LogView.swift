@@ -22,7 +22,8 @@ struct ListBackgroundModifier: ViewModifier {
 
 struct LogView: View {
     @State private var selectedCategory: Categories = .networkLogging
-    @State private var showAlert = false
+    @State private var showClearLogFileAlert = false
+    @State private var showCopyAlert = false
     @State var logText: String = ""
 
     var body: some View {
@@ -59,6 +60,12 @@ struct LogView: View {
                             }) {
                                 Image(systemName: "doc.on.doc")
                             }
+                            .onTapGesture {
+                                showCopyAlert = true
+                            }
+                            .alert(isPresented: $showCopyAlert) {
+                                Alert(title: Text("Контент лога скопирован"))
+                            }
                             .foregroundColor(.white)
                             .frame(width: 50, height: 20)
                             .padding(10)
@@ -66,9 +73,19 @@ struct LogView: View {
                             .cornerRadius(10)
 
                         Button(action: {
-                                showAlert = true
+                                
                             }) {
                                 Image(systemName: "clear")
+                            }
+                            .onTapGesture {
+                                showClearLogFileAlert = true
+                            }
+                            .alert(isPresented: $showClearLogFileAlert) {
+                                Alert(title: Text("Контент лога будет очищен"),
+                                      primaryButton: .destructive(Text("Отмена")),
+                                      secondaryButton: .cancel(Text("Очистить"), action: {
+                                    clearFileContent(category: selectedCategory)
+                                }))
                             }
                             .foregroundColor(.white)
                             .frame(width: 50, height: 20)
@@ -78,13 +95,6 @@ struct LogView: View {
                         }
                     }
                 .listRowBackground(Color.clear)
-                .alert(isPresented: $showAlert) {
-                    Alert(title: Text("Контент лога будет очищен"),
-                          primaryButton: .destructive(Text("Очистить"), action: {
-                        clearFileContent(category: selectedCategory)
-                    }),
-                          secondaryButton: .default(Text("Отмена")))
-                }
 //                .frame(width: .infinity, height: 20)
 
                 if logText != "" {

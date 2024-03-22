@@ -55,6 +55,7 @@ final public class Logging: LoggingInterface {
     private static let sharedInstance: Logging = {
         let instance = Logging()
         subsystem = Bundle.main.bundleIdentifier ?? "undefinedSubsystemBundle"
+        
         return instance
     }()
     static weak var sharedWeakInstance: Logging? = sharedInstance

@@ -65,6 +65,7 @@ struct LogView: View {
                             .cornerRadius(10)
 
                         Button(action: {
+                                clearFileContent(category: selectedCategory)
                             }) {
                                 Image(systemName: "clear")
                             }
@@ -117,6 +118,24 @@ struct LogView: View {
         }
     }
     
+    func clearFileContent(category: Categories) {
+        do {
+            guard let filePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("\(category.rawValue).txt") else {
+                // Обработка ошибки в случае, если не удалось получить путь к файлу
+                return
+            }
+
+            let emptyData = Data() // Создание пустых данных
+
+            try emptyData.write(to: filePath, options: .atomic) // Запись пустых данных в файл
+            logText = ""
+            print("Содержимое файла очищено успешно")
+        } catch {
+            // Обработка ошибки, если не удалось записать пустые данные в файл
+            print("Ошибка при очистке содержимого файла: \(error.localizedDescription)")
+        }
+    }
+
     func shareSheet(url: Categories) {
         let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("\(url.rawValue).txt")
         let activityView = UIActivityViewController(activityItems: [url!], applicationActivities: nil)

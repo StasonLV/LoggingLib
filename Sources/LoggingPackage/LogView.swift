@@ -104,6 +104,7 @@ struct LogView: View {
                             VStack(alignment: .leading, spacing: 20) {
                                 Text(logText).frame(maxWidth: .infinity)
                                     .onTapGesture {
+                                        showCopyAlert = true
                                         UIPasteboard.general.string = logText
                                 }
                             }

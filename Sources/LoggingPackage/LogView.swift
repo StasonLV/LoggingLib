@@ -43,9 +43,7 @@ struct LogView: View {
                 Section {
                     HStack(alignment: .center, spacing: 60) {
                             Button(action: {
-                                let activityViewController = UIActivityViewController(activityItems: [], applicationActivities: nil)
-                                        UIApplication.shared.windows.first?.rootViewController?.present(activityViewController, animated: true, completion: nil)
-
+                                shareSheet(url: selectedCategory)
                             }) {
                                 Image(systemName: "square.and.arrow.up")
                             }
@@ -117,6 +115,19 @@ struct LogView: View {
 //            log(for: .privateFileLogging, with: "Error reading log file content: \(error.localizedDescription)", priority: .error)
             logText = ""
         }
+    }
+    
+    func shareSheet(url: Categories) {
+        let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("\(url.rawValue).txt")
+        let activityView = UIActivityViewController(activityItems: [url!], applicationActivities: nil)
+
+        let allScenes = UIApplication.shared.connectedScenes
+        let scene = allScenes.first { $0.activationState == .foregroundActive }
+
+        if let windowScene = scene as? UIWindowScene {
+            windowScene.keyWindow?.rootViewController?.present(activityView, animated: true, completion: nil)
+        }
+
     }
 }
 

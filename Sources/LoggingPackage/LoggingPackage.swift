@@ -27,7 +27,7 @@ final public class Logging: LoggingInterface {
         let modalView = AnyView(contentView)
         
         let hostingController = UIHostingController(rootView: modalView)
-        hostingController.modalPresentationStyle = .formSheet
+        hostingController.modalPresentationStyle = .overFullScreen
         hostingController.sheetPresentationController?.prefersGrabberVisible = true
         hostingController.view.backgroundColor = .clear
         UIApplication.shared.windows.first?.rootViewController?.present(hostingController, animated: true, completion: nil)

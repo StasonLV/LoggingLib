@@ -30,7 +30,7 @@ final public class Logging: LoggingInterface {
         hostingController.modalPresentationStyle = .overFullScreen
         hostingController.sheetPresentationController?.prefersGrabberVisible = true
         hostingController.view.backgroundColor = .clear
-        UIApplication.shared.windows.first?.rootViewController?.present(hostingController, animated: true, completion: nil)
+        UIApplication.shared.windows.first?.rootViewController?.navigationController?.pushViewController(hostingController, animated: true)
     }
 
     private static var subsystem: String! {

@@ -20,29 +20,17 @@ protocol LoggingInterface {
 }
 
 final public class Logging: LoggingInterface {
-//    public static func showModalView() {
-//
-//        let contentView = LogView()
-//                
-//        let modalView = AnyView(contentView)
-//        
-//        let hostingController = UIHostingController(rootView: modalView)
-//        hostingController.modalPresentationStyle = .formSheet
-//        hostingController.sheetPresentationController?.prefersGrabberVisible = true
-//        hostingController.view.backgroundColor = .clear
-//        UIApplication.shared.windows.first?.rootViewController?.present(hostingController, animated: true, completion: nil)
-//    }
-
     public static func showModalView() {
+
         let contentView = LogView()
-
-        let hostingController = UIHostingController(rootView: contentView)
-        let navigationController = UINavigationController(rootViewController: hostingController)
-
-        // Push the navigation controller onto the existing navigation stack
-        if let currentViewController = UIApplication.shared.windows.first?.rootViewController {
-            currentViewController.navigationController?.pushViewController(navigationController, animated: true)
-        }
+                
+        let modalView = AnyView(contentView)
+        
+        let hostingController = UIHostingController(rootView: modalView)
+        hostingController.modalPresentationStyle = .formSheet
+        hostingController.sheetPresentationController?.prefersGrabberVisible = true
+        hostingController.view.backgroundColor = .clear
+        UIApplication.shared.windows.first?.rootViewController?.present(hostingController, animated: true, completion: nil)
     }
 
     private static var subsystem: String! {

@@ -22,6 +22,7 @@ struct ListBackgroundModifier: ViewModifier {
 
 struct LogView: View {
     @State private var selectedCategory: Categories = .networkLogging
+    @State private var showAlert = false
     @State var logText: String = ""
 
     var body: some View {
@@ -43,7 +44,7 @@ struct LogView: View {
                 Section {
                     HStack(alignment: .center, spacing: 60) {
                             Button(action: {
-                                shareSheet(url: selectedCategory)
+//                                shareSheet(url: selectedCategory)
                             }) {
                                 Image(systemName: "square.and.arrow.up")
                             }
@@ -65,7 +66,7 @@ struct LogView: View {
                             .cornerRadius(10)
 
                         Button(action: {
-                                clearFileContent(category: selectedCategory)
+                                showAlert = true
                             }) {
                                 Image(systemName: "clear")
                             }
@@ -77,6 +78,13 @@ struct LogView: View {
                         }
                     }
                 .listRowBackground(Color.clear)
+                .alert(isPresented: $showAlert) {
+                    Alert(title: Text("Контент лога будет очищен"),
+                          primaryButton: .destructive(Text("Очистить"), action: {
+                        clearFileContent(category: selectedCategory)
+                    }),
+                          secondaryButton: .default(Text("Отмена")))
+                }
 //                .frame(width: .infinity, height: 20)
 
                 if logText != "" {

@@ -43,7 +43,7 @@ struct LogView: View {
                 }
                 //            .listRowBackground(Color.clear)
                 Section {
-                    HStack(alignment: .center, spacing: 60) {
+                    HStack(alignment: .center, spacing: 60.0) {
                             Button(action: {
 //                                shareSheet(url: selectedCategory)
                             }) {
@@ -94,6 +94,7 @@ struct LogView: View {
                             .background(Color.primary)
                             .cornerRadius(10)
                         }
+                    .frame(maxWidth: .infinity)
                     }
                 .listRowBackground(Color.clear)
 //                .frame(width: .infinity, height: 20)

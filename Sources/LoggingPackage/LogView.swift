@@ -56,11 +56,12 @@ struct LogView: View {
                             .cornerRadius(10)
 
                             Button(action: {
-                                UIPasteboard.general.string = logText
+                                
                             }) {
                                 Image(systemName: "doc.on.doc")
                             }
                             .onTapGesture {
+                                UIPasteboard.general.string = logText
                                 showCopyAlert = true
                             }
                             .alert(isPresented: $showCopyAlert) {

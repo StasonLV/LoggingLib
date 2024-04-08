@@ -166,8 +166,10 @@ struct LogView: View {
         guard let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("\(url.rawValue).txt") else {
             return
         }
-                
-        let activityView = UIActivityViewController(activityItems: [url], applicationActivities: nil)
+        
+        let activityItem:NSURL = NSURL(fileURLWithPath:url.absoluteString)
+        
+        let activityView = UIActivityViewController(activityItems: [activityItem], applicationActivities: nil)
 
         let allScenes = UIApplication.shared.connectedScenes
         let scene = allScenes.first { $0.activationState == .foregroundActive }

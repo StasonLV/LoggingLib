@@ -49,15 +49,20 @@ struct LogView: View {
                             }) {
                                 Image(systemName: "square.and.arrow.up")
                             }
+                            .onTapGesture {
+                                shareSheet(url: selectedCategory)
+                            }
+//                            .alert(isPresented: $showCopyAlert) {
+//                                Alert(title: Text("Контент лога скопирован"))
+//                            }
+
                             .foregroundColor(.white)
                             .frame(width: 50, height: 20)
                             .padding(10)
                             .background(Color.primary)
                             .cornerRadius(10)
 
-                            Button(action: {
-                                
-                            }) {
+                            Button(action: { }) {
                                 Image(systemName: "doc.on.doc")
                             }
                             .onTapGesture {
@@ -159,7 +164,9 @@ struct LogView: View {
 
     func shareSheet(url: Categories) {
         let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("\(url.rawValue).txt")
+        
         let activityView = UIActivityViewController(activityItems: [url!], applicationActivities: nil)
+        activityView.excludedActivityTypes = nil
 
         let allScenes = UIApplication.shared.connectedScenes
         let scene = allScenes.first { $0.activationState == .foregroundActive }
@@ -167,7 +174,6 @@ struct LogView: View {
         if let windowScene = scene as? UIWindowScene {
             windowScene.keyWindow?.rootViewController?.present(activityView, animated: true, completion: nil)
         }
-
     }
 }
 

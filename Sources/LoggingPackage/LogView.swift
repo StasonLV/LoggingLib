@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import QuickLook
 
 struct ListBackgroundModifier: ViewModifier {
 
@@ -46,26 +45,12 @@ struct LogView: View {
                 //            .listRowBackground(Color.clear)
                 Section {
                     HStack(alignment: .center, spacing: 60.0) {
-                            Button(action: {
-//                                shareSheet(url: selectedCategory)
-                                self.isSharePresented = true
-                            }) {
+                            Button(action: { }) {
                                 Image(systemName: "square.and.arrow.up")
                             }
-//                            .onTapGesture {
-//                                shareSheet(url: selectedCategory)
-//                            }
-                            .sheet(isPresented: $isSharePresented, onDismiss: {
-                                        print("Dismiss")
-                                    }, content: {
-                                        if let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("\(selectedCategory.rawValue).txt") {
-                                            
-                                            ActivityViewController(activityItems: [url])
-                                        }
-                                    })
-//                            .alert(isPresented: $showCopyAlert) {
-//                                Alert(title: Text("Контент лога скопирован"))
-//                            }
+                            .onTapGesture {
+                                shareSheet(url: selectedCategory)
+                            }
 
                             .foregroundColor(.white)
                             .frame(width: 50, height: 20)
@@ -178,7 +163,7 @@ struct LogView: View {
             return
         }
           
-        let activityView = UIActivityViewController(activityItems: ["sadas"], applicationActivities: nil)
+        let activityView = UIActivityViewController(activityItems: [url], applicationActivities: [])
 
         let allScenes = UIApplication.shared.connectedScenes
         let scene = allScenes.first { $0.activationState == .foregroundActive }
@@ -192,18 +177,4 @@ struct LogView: View {
 
 #Preview {
     LogView()
-}
-
-struct ActivityViewController: UIViewControllerRepresentable {
-
-    var activityItems: [Any]
-    var applicationActivities: [UIActivity]? = nil
-
-    func makeUIViewController(context: UIViewControllerRepresentableContext<ActivityViewController>) -> UIActivityViewController {
-        let controller = UIActivityViewController(activityItems: activityItems, applicationActivities: applicationActivities)
-        return controller
-    }
-
-    func updateUIViewController(_ uiViewController: UIActivityViewController, context: UIViewControllerRepresentableContext<ActivityViewController>) {}
-
 }

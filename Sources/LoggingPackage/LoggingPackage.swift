@@ -16,11 +16,11 @@ protocol LoggingInterface {
         line: Int,
         appendToFile: Bool
     )
-    static func showModalView()
+    static func showModalView(navController: UINavigationController)
 }
 
 final public class Logging: LoggingInterface {
-    public static func showModalView() {
+    public static func showModalView(navController: UINavigationController) {
 
         let contentView = LogView()
                 
@@ -30,13 +30,14 @@ final public class Logging: LoggingInterface {
         hostingController.modalPresentationStyle = .formSheet
         hostingController.sheetPresentationController?.prefersGrabberVisible = true
         hostingController.view.backgroundColor = .clear
+        navController.pushViewController(hostingController, animated: true)
 //        UIApplication.shared.windows.first?.rootViewController?.present(hostingController, animated: true, completion: nil)
-        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-            let window = windowScene.windows.first,
-            let rootViewController = window.rootViewController,
-            let navigationController = rootViewController.navigationController {
-            navigationController.present(hostingController, animated: true)
-        }
+//        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+//            let window = windowScene.windows.first,
+//            let rootViewController = window.rootViewController,
+//            let navigationController = rootViewController.navigationController {
+//            navigationController.present(hostingController, animated: true)
+//        }
     }
 
     private static var subsystem: String! {

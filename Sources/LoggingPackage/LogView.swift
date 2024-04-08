@@ -24,7 +24,7 @@ struct LogView: View {
     @State private var selectedCategory: Categories = .networkLogging
     @State private var showClearLogFileAlert = false
     @State private var showCopyAlert = false
-    @State private var isSharePresented: Bool = false
+    @State var showSheet = false
     @State var logText: String = ""
 
     var body: some View {
@@ -45,11 +45,13 @@ struct LogView: View {
                 //            .listRowBackground(Color.clear)
                 Section {
                     HStack(alignment: .center, spacing: 60.0) {
-                            Button(action: { }) {
+                            Button(action: { self.showSheet.toggle() }) {
                                 Image(systemName: "square.and.arrow.up")
                             }
-                            .onTapGesture {
-                                shareSheet(url: selectedCategory)
+                            .sheet(isPresented: $showSheet) {
+                                if let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("\(selectedCategory.rawValue).txt") {
+                                    ActivityView(url: url, showing: self.$showSheet)
+                                }
                             }
 
                             .foregroundColor(.white)
@@ -177,4 +179,23 @@ struct LogView: View {
 
 #Preview {
     LogView()
+}
+
+struct ActivityView: UIViewControllerRepresentable {
+    var url: URL
+    @Binding var showing: Bool
+
+    func makeUIViewController(context: Context) -> UIActivityViewController {
+        let vc = UIActivityViewController(
+            activityItems: [url],
+            applicationActivities: nil
+        )
+        vc.completionWithItemsHandler = { (activityType, completed, returnedItems, error) in
+            self.showing = false
+        }
+        return vc
+    }
+
+    func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {
+    }
 }

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import QuickLook
 
 struct ListBackgroundModifier: ViewModifier {
 
@@ -26,6 +27,7 @@ struct LogView: View {
     @State private var showCopyAlert = false
     @State var showSheet = false
     @State var logText: String = ""
+    @State var url: URL?
 
     var body: some View {
             List {
@@ -45,14 +47,18 @@ struct LogView: View {
                 //            .listRowBackground(Color.clear)
                 Section {
                     HStack(alignment: .center, spacing: 60.0) {
-                            Button(action: { self.showSheet.toggle() }) {
+                        Button(action: {
+//                            self.showSheet.toggle()
+                            self.url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("\(selectedCategory.rawValue).txt")
+                        }) {
                                 Image(systemName: "square.and.arrow.up")
                             }
-                            .sheet(isPresented: $showSheet) {
-                                if let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("\(selectedCategory.rawValue).txt") {
-                                    ActivityView(url: url, showing: self.$showSheet)
-                                }
-                            }
+                            .quickLookPreview($url)
+//                            .sheet(isPresented: $showSheet) {
+//                                if let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("\(selectedCategory.rawValue).txt") {
+//                                    ActivityView(url: url, showing: self.$showSheet)
+//                                }
+//                            }
 
                             .foregroundColor(.white)
                             .frame(width: 50, height: 20)

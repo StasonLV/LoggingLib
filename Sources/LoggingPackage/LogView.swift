@@ -163,34 +163,17 @@ struct LogView: View {
     }
 
     func shareSheet(url: Categories) {
-        let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("\(url.rawValue).txt")
-        
-        let file = getFile(from: url)
-        
-        let activityView = UIActivityViewController(activityItems: [file], applicationActivities: nil)
-        
-        activityView.excludedActivityTypes = nil
+        guard let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("\(url.rawValue).txt") else {
+            return
+        }
+                
+        let activityView = UIActivityViewController(activityItems: [url], applicationActivities: nil)
 
         let allScenes = UIApplication.shared.connectedScenes
         let scene = allScenes.first { $0.activationState == .foregroundActive }
 
         if let windowScene = scene as? UIWindowScene {
             windowScene.keyWindow?.rootViewController?.present(activityView, animated: true, completion: nil)
-        }
-    }
-    
-    func getFile(from url: URL?) -> Data {
-        guard let fileURL = url else {
-            print("URL is nil")
-            return Data()
-        }
-
-        do {
-            let fileData = try Data(contentsOf: fileURL)
-            return fileData
-        } catch {
-            print("Ошибка при чтении файла: \(error.localizedDescription)")
-            return Data()
         }
     }
 }

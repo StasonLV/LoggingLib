@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import QuickLook
 
 struct ListBackgroundModifier: ViewModifier {
 
@@ -167,9 +168,8 @@ struct LogView: View {
             return
         }
         
-        let activityItem:NSURL = url as NSURL
         
-        let activityView = UIActivityViewController(activityItems: [activityItem], applicationActivities: nil)
+        let activityView = UIActivityViewController(activityItems: ["sadas"], applicationActivities: nil)
 
         let allScenes = UIApplication.shared.connectedScenes
         let scene = allScenes.first { $0.activationState == .foregroundActive }

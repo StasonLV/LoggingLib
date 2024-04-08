@@ -25,6 +25,7 @@ struct LogView: View {
     @State private var selectedCategory: Categories = .networkLogging
     @State private var showClearLogFileAlert = false
     @State private var showCopyAlert = false
+    @State private var isSharePresented: Bool = false
     @State var logText: String = ""
 
     var body: some View {
@@ -47,12 +48,21 @@ struct LogView: View {
                     HStack(alignment: .center, spacing: 60.0) {
                             Button(action: {
 //                                shareSheet(url: selectedCategory)
+                                self.isSharePresented = true
                             }) {
                                 Image(systemName: "square.and.arrow.up")
                             }
-                            .onTapGesture {
-                                shareSheet(url: selectedCategory)
-                            }
+//                            .onTapGesture {
+//                                shareSheet(url: selectedCategory)
+//                            }
+                            .sheet(isPresented: $isSharePresented, onDismiss: {
+                                        print("Dismiss")
+                                    }, content: {
+                                        if let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("\(selectedCategory.rawValue).txt") {
+                                            
+                                            ActivityViewController(activityItems: [url])
+                                        }
+                                    })
 //                            .alert(isPresented: $showCopyAlert) {
 //                                Alert(title: Text("Контент лога скопирован"))
 //                            }
@@ -167,8 +177,7 @@ struct LogView: View {
         guard let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("\(url.rawValue).txt") else {
             return
         }
-        
-        
+          
         let activityView = UIActivityViewController(activityItems: ["sadas"], applicationActivities: nil)
 
         let allScenes = UIApplication.shared.connectedScenes
@@ -177,9 +186,24 @@ struct LogView: View {
         if let windowScene = scene as? UIWindowScene {
             windowScene.keyWindow?.rootViewController?.present(activityView, animated: true, completion: nil)
         }
+        
     }
 }
 
 #Preview {
     LogView()
+}
+
+struct ActivityViewController: UIViewControllerRepresentable {
+
+    var activityItems: [Any]
+    var applicationActivities: [UIActivity]? = nil
+
+    func makeUIViewController(context: UIViewControllerRepresentableContext<ActivityViewController>) -> UIActivityViewController {
+        let controller = UIActivityViewController(activityItems: activityItems, applicationActivities: applicationActivities)
+        return controller
+    }
+
+    func updateUIViewController(_ uiViewController: UIActivityViewController, context: UIViewControllerRepresentableContext<ActivityViewController>) {}
+
 }

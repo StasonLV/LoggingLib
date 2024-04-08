@@ -35,7 +35,7 @@ final public class Logging: LoggingInterface {
             let window = windowScene.windows.first,
             let rootViewController = window.rootViewController,
             let navigationController = rootViewController.navigationController {
-            navigationController.pushViewController(hostingController, animated: true)
+            navigationController.present(hostingController, animated: true)
         }
     }
 

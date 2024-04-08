@@ -167,7 +167,7 @@ struct LogView: View {
             return
         }
         
-        let activityItem:NSURL = NSURL(fileURLWithPath:url.absoluteString)
+        let activityItem:NSURL = url as NSURL
         
         let activityView = UIActivityViewController(activityItems: [activityItem], applicationActivities: nil)
 
